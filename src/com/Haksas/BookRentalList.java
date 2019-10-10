@@ -95,7 +95,7 @@ public class BookRentalList extends JPanel{
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("SELECT Student_dept FROM Student GROUP BY Student_dept; ");
 			
-			row.add("��ü");
+			row.add("전체");
 			while(rs.next()) {
 				row.add(rs.getString("Student_dept"));
 			}

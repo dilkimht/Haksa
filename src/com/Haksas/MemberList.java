@@ -1,6 +1,7 @@
 package com.Haksas;
 
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -12,12 +13,15 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -25,8 +29,12 @@ public class MemberList  extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Connection conn = null;
 	Statement stmt = null;
+	Haksa myThis = null;
 	DefaultTableModel model = null;
 	JTable table = null;
+	
+	DefaultTableModel majorModel = null;
+	JTable majorTable = null;
 	
 	JTextField tf_id = null;
 	JTextField tf_name = null;
@@ -35,11 +43,11 @@ public class MemberList  extends JPanel {
 	
 	private enum CRUD { SELECT, INSERT, UPDATE, DELETE };
 	
-	public MemberList(Connection conn) {
+	public MemberList(Haksa myThis, Connection conn) {
 		// TODO Auto-generated constructor stub
 		
 		this.conn = conn;
-		
+		this.myThis = myThis;
 		
 		setLayout(new FlowLayout());
 		
@@ -70,8 +78,20 @@ public class MemberList  extends JPanel {
 		
 		
 		add(new JLabel("이름"));
-		tf_name = new JTextField(29);
+		tf_name = new JTextField(21);
 		add(tf_name);
+		
+		DialogMajors dMajor = new DialogMajors(myThis, "학과");
+		JButton btnMajor = new JButton("학과검색");
+		btnMajor.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				dMajor.setVisible(true);
+			}
+		});
+		add(btnMajor);
 		
 		add(new JLabel("학과"));
 		tf_dept = new JTextField(29);
@@ -216,25 +236,25 @@ public class MemberList  extends JPanel {
 			switch(type) {
 			case SELECT:
 				if(where == null) {
-					rs = stmt.executeQuery("Select * from Student");
+					rs = stmt.executeQuery("SELECT Student.Student_id, Student.Student_name, Majors.Major_name, Student.Student_address FROM Student, Majors WHERE Student.Student_dept = Majors.Major_id");
 					
 					while(rs.next()) {
 						String [] row = new String[4];
 						row[0] = rs.getString("Student_id");
 						row[1] = rs.getString("Student_name");
-						row[2] = rs.getString("Student_dept");
+						row[2] = rs.getString("Major_name");
 						row[3] = rs.getString("Student_address");
 						model.addRow(row);
 					}
 					
 				} else {
-					rs = stmt.executeQuery("SELECT * FROM Student WHERE Student_id = '" + where + "'");
+					rs = stmt.executeQuery("SELECT Student.Student_id, Student.Student_name, Majors.Major_name, Student.Student_address FROM Student, Majors WHERE Student.Student_dept = Majors.Major_id AND Student_id = '" + where + "'");
 					
 					String [] row = new String[4];
 					if(rs.next()) {
 						row[0] = rs.getString("Student_id");
 						row[1] = rs.getString("Student_name");
-						row[2] = rs.getString("Student_dept");
+						row[2] = rs.getString("Major_name");
 						row[3] = rs.getString("Student_address");
 						tf_id.setText(row[0]);
 						tf_name.setText(row[1]);
@@ -246,7 +266,7 @@ public class MemberList  extends JPanel {
 				break;
 			case INSERT:
 				try {
-					rs = stmt.executeQuery("insert into Student values('"
+					stmt.executeUpdate("insert into Student values('"
 							+ 	tf_id.getText() +"', '"+ tf_name.getText() + "', '" + tf_dept.getText() + "', '" + tf_address.getText() + "')");
 				} catch (Exception e2) {
 					// TODO: handle exception
@@ -277,6 +297,48 @@ public class MemberList  extends JPanel {
 			// TODO: handle exception\
 			System.out.println(e.getMessage());
 			e.getStackTrace();
+		}
+	}
+	
+	
+	class DialogMajors extends JDialog {
+		private static final long serialVersionUID = 342L;
+		JPanel dialogPanel = null;
+		
+		public DialogMajors(Haksa myThis, String title) {
+			// TODO Auto-generated constructor stub
+			super(myThis, title, true);
+			setTitle(title);
+			setLayout(null);
+			dialogPanel = new JPanel();
+			dialogPanel.setLayout(null);
+			dialogPanel.setSize(280, 280);
+			//sdialogPanel.setBorder(new LineBorder(Color.BLACK));
+			
+			JLabel Label_major = new JLabel("학과");
+			Label_major.setBounds(10, 10, 36, 22);
+			//Label_major.setBorder(new LineBorder(Color.BLACK));
+			dialogPanel.add(Label_major);
+			JTextField tf_major = new JTextField(28);
+			tf_major.setBounds(40, 10, 170, 22);
+			tf_major.setEditable(false);
+			dialogPanel.add(tf_major);
+			
+			String colName [] = {"학과번호", "학과"};
+			majorModel = new DefaultTableModel(colName, 0);
+			majorTable = new JTable(majorModel);
+			majorTable.setPreferredScrollableViewportSize(new Dimension(265, 200));
+			JScrollPane tableSP = new JScrollPane(majorTable);
+			tableSP.setBounds(10, 50, 265, 200);
+			dialogPanel.add(tableSP);
+			
+			JButton btnSelect = new JButton("선택");
+			btnSelect.setBounds(215, 8, 60, 25);
+			dialogPanel.add(btnSelect);
+			
+			
+			add(dialogPanel);
+			setSize(300, 300);
 		}
 	}
 	

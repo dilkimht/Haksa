@@ -103,7 +103,7 @@ public class Haksa extends JFrame{
 				mainPanel.repaint(); // �ٽñ׸���
 				mainPanel.setLayout(null);
 				
-				mainPanel.add(new MemberList(conn));
+				mainPanel.add(new MemberList(myThis,conn));
 				setSize(400, 520);
 			}
 		});
@@ -119,9 +119,9 @@ public class Haksa extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				mainPanel.removeAll();// ��� ������Ʈ �����
-				mainPanel.revalidate();// �ٽ� Ȱ��ȭ
-				mainPanel.repaint(); // �ٽñ׸���
+				mainPanel.removeAll();
+				mainPanel.revalidate();
+				mainPanel.repaint(); 
 				mainPanel.setLayout(null);
 				
 				mainPanel.add(new BookRental(conn));
@@ -137,13 +137,12 @@ public class Haksa extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				//System.out.println("�������");
-				mainPanel.removeAll();// ��� ������Ʈ �����
-				mainPanel.revalidate();// �ٽ� Ȱ��ȭ
-				mainPanel.repaint(); // �ٽñ׸���
+				
+				mainPanel.removeAll();
+				mainPanel.revalidate();
+				mainPanel.repaint(); 
 				mainPanel.setLayout(null);
-				//BookRental bookRental = (BookRental)myHaksas.get("bookRental");
-				//bookRental.initList();
+		
 				
 				//mainPanel.setBorder(new LineBorder(Color.RED));
 				mainPanel.add(new BookRentalList(conn));
@@ -153,14 +152,35 @@ public class Haksa extends JFrame{
 		});
 		
 		rentalMenu.add(item_dechulInfo);
-		JMenuItem item_hyunhuang = new JMenuItem("학점현황");
-		
-		JMenu hakjoumMenu = new JMenu("학점매뉴");
 		
 		
+		JMenu GradeMenu = new JMenu("학점매뉴");
+		JMenuItem item_GradeAdd = new JMenuItem("학점등록");
+		item_GradeAdd.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				mainPanel.removeAll();
+				mainPanel.revalidate();
+				mainPanel.repaint(); 
+				mainPanel.setLayout(null);
+		
+				
+				//mainPanel.setBorder(new LineBorder(Color.RED));
+				mainPanel.add(new GradeAdd(conn));
+				
+				myThis.setSize(600, 500);
+			}
+		});
+		GradeMenu.add(item_GradeAdd);
+		JMenuItem item_GradeList = new JMenuItem("학점현황");
+		
+		GradeMenu.add(item_GradeList);
 		mb.add(studentMenu);
 		mb.add(rentalMenu);
-		mb.add(hakjoumMenu);
+		mb.add(GradeMenu);
 		
 		setJMenuBar(mb);
 	}
