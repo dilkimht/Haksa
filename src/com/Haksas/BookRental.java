@@ -68,23 +68,23 @@ public class BookRental extends JPanel{
 		//pane1.setBorder(new LineBorder(Color.RED));
 		//pane2.setBorder(new LineBorder(Color.GREEN));
 
-		JLabel label_hakbun = new JLabel("ÇĞ¹ø");
+		JLabel label_hakbun = new JLabel("í•™ë²ˆ");
 		pane1.add(label_hakbun);
 		
 		tf_hakbun = new JTextField(12);
 		pane1.add(tf_hakbun);
 		
-		JButton btnSelect1 = new JButton("°Ë»ö");
+		JButton btnSelect1 = new JButton("ê²€ìƒ‰");
 		
 		pane1.add(btnSelect1);
 		
-		JLabel label_name = new JLabel("ÀÌ¸§");
+		JLabel label_name = new JLabel("ì´ë¦„");
 		pane1.add(label_name);
 		
 		JTextField tf_name = new JTextField(12);
 		pane1.add(tf_name);
 		
-		JButton btnList1 = new JButton("¸ñ·Ï");
+		JButton btnList1 = new JButton("ëª©ë¡");
 		btnList1.addActionListener(new ActionListener() {
 			
 			@Override
@@ -95,7 +95,7 @@ public class BookRental extends JPanel{
 		});
 		pane1.add(btnList1);
 		
-		JLabel label_dept = new JLabel("ÇĞ°ú");
+		JLabel label_dept = new JLabel("í•™ê³¼");
 		pane1.add(label_dept);
 		
 		JTextField tf_dept = new JTextField(18);
@@ -103,31 +103,31 @@ public class BookRental extends JPanel{
 		
 		
 		
-		String colName1 [] = {"ÇĞ¹ø", "ÀÌ¸§", "ÇĞ°ú"};
+		String colName1 [] = {"í•™ë²ˆ", "ì´ë¦„", "í•™ê³¼"};
 		model1 = new DefaultTableModel(colName1, 0);
 		table1 = new JTable(model1);
-		// Å×ÀÌºí »çÀÌÁî
+		// ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		table1.setPreferredScrollableViewportSize(new Dimension(230, 300));
 		pane1.add(new JScrollPane(table1));
 		
 		
-		JLabel label_bookNo = new JLabel("Ã¥¹øÈ£");
+		JLabel label_bookNo = new JLabel("ì±…ë²ˆí˜¸");
 		pane2.add(label_bookNo);
 		
 		tf_bookNo = new JTextField(10);
 		pane2.add(tf_bookNo);
 		
-		JButton btnSelect2 = new JButton("°Ë»ö");
+		JButton btnSelect2 = new JButton("ê²€ìƒ‰");
 		
 		pane2.add(btnSelect2);
 		
-		JLabel label_bookName = new JLabel("Ã¥ÀÌ¸§");
+		JLabel label_bookName = new JLabel("ì±…ì´ë¦„");
 		pane2.add(label_bookName);
 		
 		JTextField tf_bookName = new JTextField(10);
 		pane2.add(tf_bookName);
 		
-		JButton btnList2 = new JButton("¸ñ·Ï");
+		JButton btnList2 = new JButton("ëª©ë¡");
 		btnList2.addActionListener(new ActionListener() {
 			
 			@Override
@@ -138,10 +138,10 @@ public class BookRental extends JPanel{
 		});
 		pane2.add(btnList2);
 				
-		String colName2 [] = {"Ã¥¹øÈ£", "Ã¥ÀÌ¸§", "°¡´É¿©ºÎ"};
+		String colName2 [] = {"ì±…ë²ˆí˜¸", "ì´ë¦„", "ëŒ€ì—¬ì—¬ë¶€"};
 		model2 = new DefaultTableModel(colName2, 0);
 		table2 = new JTable(model2);
-		// Å×ÀÌºí »çÀÌÁî
+		// ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		table2.setPreferredScrollableViewportSize(new Dimension(230, 326));
 		pane2.add(new JScrollPane(table2));
 
@@ -232,48 +232,9 @@ public class BookRental extends JPanel{
 		
 		query(RentalStatus.SEARCH1, 0, null);
 		query(RentalStatus.SEARCH2, 0, null);
+
 		
-//		add(cb_dept);
-//		
-//		cb_dept.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// TODO Auto-generated method stub
-//				@SuppressWarnings("unchecked")
-//				JComboBox<String> cb = (JComboBox<String>)e.getSource();
-//				int cb_index = cb.getSelectedIndex();
-//				
-//				if(cb_index == 0) {
-//					String query = "SELECT br.RentStudent_id, s.Student_name, b.Book_title, br.BookRental_Date FROM BookRental br, Student s, Books b WHERE br.RentStudent_id = s.Student_id AND br.RentBook_No = b.Book_no";
-//					BookList(query);
-//				} else {
-//					
-//					String query = "SELECT br.RentStudent_id, s.Student_name, b.Book_title, br.BookRental_Date FROM BookRental br, Student s, Books b WHERE br.RentStudent_id = s.Student_id AND br.RentBook_No = b.Book_no and "
-//							+ "s.Student_dept = '" + row.get(cb_index) + "'";
-//					BookList(query);
-//				}
-//				
-//				
-//			}
-//		});
-//		
-//		
-//		
-//	
-//		
-//		String colName [] = {"ÇĞ¹ø", "ÀÌ¸§", "µµ¼­¸í", "´ëÃâÀÏ"};
-//		model = new DefaultTableModel(colName, 0);
-//		table = new JTable(model);
-//		// Å×ÀÌºí »çÀÌÁî
-//		table.setPreferredScrollableViewportSize(new Dimension(500, 400));
-//		add(new JScrollPane(table));
-//		
-//		String query = "SELECT br.RentStudent_id, s.Student_name, b.Book_title, br.BookRental_Date FROM BookRental br, Student s, Books b WHERE br.RentStudent_id = s.Student_id AND br.RentBook_No = b.Book_no";
-//		BookList(query);
-		
-		
-		JButton btnLoan = new JButton("´ëÃâ");
+		JButton btnLoan = new JButton("ëŒ€ì¶œ");
 		btnLoan.setBounds(185, 430, 60, 30);
 		btnLoan.addActionListener(new ActionListener() {
 			
@@ -281,13 +242,13 @@ public class BookRental extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if(Pivot.equals("N"))
-					JOptionPane.showMessageDialog(null, "ÀÌ¹Ì ´ëÃâÇÑ Ã¥ÀÔ´Ï´Ù", "Message", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "ì´ë¯¸ ëŒ€ì¶œí•œ ì±…ì…ë‹ˆë‹¤.", "Message", JOptionPane.ERROR_MESSAGE);
 				else {
-					int result = JOptionPane.showConfirmDialog(null, "´ëÃâÇÏ½Ã°Ú½À´Ï±î?", "Message", JOptionPane.YES_NO_OPTION);
+					int result = JOptionPane.showConfirmDialog(null, "ëŒ€ì¶œí•˜ì‹œê² ìŠµë‹ˆê¹Œ?", "Message", JOptionPane.YES_NO_OPTION);
 					
 					switch (result) {
 					case JOptionPane.OK_OPTION:
-						JOptionPane.showMessageDialog(null, "´ëÃâ¿Ï·á", "Message", JOptionPane.OK_OPTION);
+						JOptionPane.showMessageDialog(null, "ëŒ€ì¶œì™„ë£Œ", "Message", JOptionPane.OK_OPTION);
 						query(RentalStatus.LOAN, 0, null);
 						model1.setNumRows(0);
 						model2.setNumRows(0);
@@ -305,7 +266,7 @@ public class BookRental extends JPanel{
 		});
 		add(btnLoan);
 		
-		JButton btnReturn = new JButton("¹İ³³");
+		JButton btnReturn = new JButton("ë°˜ë‚©");
 		btnReturn.setBounds(274, 430, 60, 30);
 		btnReturn.addActionListener(new ActionListener() {
 			
@@ -313,13 +274,13 @@ public class BookRental extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if(Pivot.equals("Y"))
-					JOptionPane.showMessageDialog(null, "ºô·Á°¡Áö ¾ÊÀº Ã¥ÀÔ´Ï´Ù.", "Message", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "ì´ë¯¸ ë°˜ë‚©ëœ ì±…ì…ë‹ˆë‹¤.", "Message", JOptionPane.ERROR_MESSAGE);
 				else {
-					int result = JOptionPane.showConfirmDialog(null, "¹İ³³ÇÏ½Ã°Ú½À´Ï±î?", "Message", JOptionPane.YES_NO_OPTION);
+					int result = JOptionPane.showConfirmDialog(null, "ë°˜ë‚©í•˜ì‹œê² ìŠµë‹ˆê¹Œ?", "Message", JOptionPane.YES_NO_OPTION);
 					
 					switch (result) {
 					case JOptionPane.OK_OPTION:
-						JOptionPane.showMessageDialog(null, "¹İ³³¿Ï·á", "Message", JOptionPane.OK_OPTION);
+						JOptionPane.showMessageDialog(null, "ë°˜ë‚©ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤", "Message", JOptionPane.OK_OPTION);
 						query(RentalStatus.RETURN, 0, null);
 						model1.setNumRows(0);
 						model2.setNumRows(0);
@@ -413,7 +374,7 @@ public class BookRental extends JPanel{
 			try {
 				stmt = conn.createStatement();
 				if(inValue == null)
-					stmt.executeUpdate("insert into BookRental(RentStudent_id, RentBook_No, BookRental_Date, BookRental_loan) values('"+ tf_hakbun.getText() +"','" + tf_bookNo.getText() + "','" + time + "', '»ç¿ëÁß')");
+					stmt.executeUpdate("insert into BookRental(RentStudent_id, RentBook_No, BookRental_Date, BookRental_loan) values('"+ tf_hakbun.getText() +"','" + tf_bookNo.getText() + "','" + time + "', 'ëŒ€ì¶œ')");
 					stmt.executeUpdate("UPDATE Books SET Book_loan = 'N' WHERE Book_no = '" + tf_bookNo.getText() + "'");
 			} catch (Exception e) {
 					// TODO: handle exception
@@ -423,7 +384,7 @@ public class BookRental extends JPanel{
 			try {
 				stmt = conn.createStatement();
 				if(inValue == null)
-					stmt.executeUpdate("UPDATE BookRental SET BookRental_loan = '¹İ³³' WHERE RentBook_No = '" + tf_bookNo.getText() + "'");
+					stmt.executeUpdate("UPDATE BookRental SET BookRental_loan = 'ë°˜ë‚©' WHERE RentBook_No = '" + tf_bookNo.getText() + "'");
 					stmt.executeUpdate("UPDATE Books SET Book_loan = 'Y' WHERE Book_no = '" + tf_bookNo.getText() + "'");
 			} catch (Exception e) {
 					// TODO: handle exception

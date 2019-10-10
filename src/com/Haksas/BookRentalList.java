@@ -35,7 +35,7 @@ public class BookRentalList extends JPanel{
 		
 	setLayout(new FlowLayout());
 		
-		JLabel label_hakbun = new JLabel("ÇĞ°ú");
+		JLabel label_hakbun = new JLabel("í•™ë²ˆ");
 		
 		add(label_hakbun);
 		
@@ -73,10 +73,10 @@ public class BookRentalList extends JPanel{
 		
 	
 		
-		String colName [] = {"ÇĞ¹ø", "ÀÌ¸§", "µµ¼­¸í", "´ëÃâÀÏ", "¹İ³³¿©ºÎ"};
+		String colName [] = {"í•™ë²ˆ", "ì´ë¦„", "í•™ê³¼", "ì£¼ì†Œ", "ëŒ€ì—¬ê°€ëŠ¥ì—¬ë¶€"};
 		model = new DefaultTableModel(colName, 0);
 		table = new JTable(model);
-		// Å×ÀÌºí »çÀÌÁî
+		// ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		table.setPreferredScrollableViewportSize(new Dimension(500, 400));
 		add(new JScrollPane(table));
 		
@@ -95,7 +95,7 @@ public class BookRentalList extends JPanel{
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery("SELECT Student_dept FROM Student GROUP BY Student_dept; ");
 			
-			row.add("ÀüÃ¼");
+			row.add("ï¿½ï¿½Ã¼");
 			while(rs.next()) {
 				row.add(rs.getString("Student_dept"));
 			}

@@ -69,21 +69,21 @@ public class MemberList  extends JPanel {
 		add(btnSelect);
 		
 		
-		add(new JLabel("�̸�"));
+		add(new JLabel("이름"));
 		tf_name = new JTextField(29);
 		add(tf_name);
 		
-		add(new JLabel("�а�"));
+		add(new JLabel("학과"));
 		tf_dept = new JTextField(29);
 		add(tf_dept);
 		
-		add(new JLabel("�ּ�"));
+		add(new JLabel("주소"));
 		tf_address = new JTextField(29);
 		add(tf_address);
 		
 		
 		
-		String colName [] = {"�й�", "�̸�", "�а�", "�ּ�"};
+		String colName [] = {"학번", "이름", "학과", "주소"};
 		model = new DefaultTableModel(colName, 0);
 		table = new JTable(model);
 		// ���̺� ������
@@ -122,7 +122,7 @@ public class MemberList  extends JPanel {
 		});
 		
 		
-		JButton btnInsert = new JButton("���");
+		JButton btnInsert = new JButton("등록");
 		btnInsert.addActionListener(new ActionListener() {
 			
 			@Override
@@ -133,10 +133,10 @@ public class MemberList  extends JPanel {
 					tf_name.getText().equals("") ||
 					tf_dept.getText().equals("") ||
 					tf_address.getText().equals("")) {
-					JOptionPane.showMessageDialog(null, "���� �ۼ����� �ʾҽ��ϴ�.", "Message", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "전부 입력되지 않았습니다.", "Message", JOptionPane.ERROR_MESSAGE);
 				} else {
 					
-					JOptionPane.showMessageDialog(null, "����Ǿ����ϴ�.", "Message", JOptionPane.YES_OPTION);
+					JOptionPane.showMessageDialog(null, "등록되었습니다.", "Message", JOptionPane.YES_OPTION);
 					list(CRUD.INSERT, null);
 					list(CRUD.SELECT, null);
 					
@@ -144,7 +144,7 @@ public class MemberList  extends JPanel {
 			}
 		});
 		add(btnInsert);
-		JButton btnList = new JButton("���");
+		JButton btnList = new JButton("목록");
 		btnList.addActionListener(new ActionListener() {
 			
 			@Override
@@ -158,17 +158,17 @@ public class MemberList  extends JPanel {
 			}
 		});
 		add(btnList);
-		JButton btnUpdate = new JButton("����");
+		JButton btnUpdate = new JButton("수정");
 		btnUpdate.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				int result = JOptionPane.showConfirmDialog(null, "�����Ͻðڽ��ϱ�??", "Message", JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog(null, "수정하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
 				
 				switch (result) {
 				case JOptionPane.OK_OPTION:
-					JOptionPane.showMessageDialog(null, "�����Ǿ����ϴ�..", "Message", JOptionPane.OK_OPTION);
+					JOptionPane.showMessageDialog(null, "수정이완료되었습니다.", "Message", JOptionPane.OK_OPTION);
 					list(CRUD.UPDATE, null);
 					list(CRUD.SELECT, null);
 					break;
@@ -178,17 +178,17 @@ public class MemberList  extends JPanel {
 			}
 		});
 		add(btnUpdate);
-		JButton btnDelete = new JButton("����");
+		JButton btnDelete = new JButton("삭제");
 		btnDelete.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				int result = JOptionPane.showConfirmDialog(null, "�����Ͻðڽ��ϱ�?", "Message", JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog(null, "삭제하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
 				
 				switch (result) {
 				case JOptionPane.OK_OPTION:
-					JOptionPane.showMessageDialog(null, "�����Ǿ����ϴ�.", "Message", JOptionPane.OK_OPTION);
+					JOptionPane.showMessageDialog(null, "삭제가 완료되었습니다.", "Message", JOptionPane.OK_OPTION);
 					list(CRUD.DELETE, null);
 					list(CRUD.SELECT, null);
 					break;
