@@ -142,7 +142,7 @@ public class MemberList  extends JPanel {
 				tf_name.setText(name);
 				tf_dept.setText(dept);
 				tf_address.setText(address);
-				System.out.println(majorNumber);
+				//System.out.println(majorNumber);
 				
 			}
 		});
@@ -274,8 +274,8 @@ public class MemberList  extends JPanel {
 				break;
 			case INSERT:
 				try {
-					stmt.executeUpdate("insert into Student values('"
-							+ 	tf_id.getText() +"', '"+ tf_name.getText() + "', '" + tf_dept.getText() + "', '" + tf_address.getText() + "')");
+					stmt.executeUpdate("CALL Insert_Student('"
+							+ 	tf_id.getText() +"', '"+ tf_name.getText() + "', '" + majorNumber + "', '" + tf_address.getText() + "')");
 				} catch (Exception e2) {
 					// TODO: handle exception
 				}
@@ -283,7 +283,7 @@ public class MemberList  extends JPanel {
 			case UPDATE:
 				try {
 					rs = stmt.executeQuery("update Student set Student_name = '"
-							+ tf_name.getText() +"', Student_dept = '"+ tf_dept.getText() + "', Student_address = '" + tf_address.getText() + "' where Student_id = '" + tf_id.getText() + "'");
+							+ tf_name.getText() +"', Student_dept = '"+ majorNumber + "', Student_address = '" + tf_address.getText() + "' where Student_id = '" + tf_id.getText() + "'");
 				} catch (Exception e2) {
 					// TODO: handle exception
 				}

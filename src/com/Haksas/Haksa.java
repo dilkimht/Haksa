@@ -81,6 +81,7 @@ public class Haksa extends JFrame{
 			}
 			
 			@Override
+			
 			public void windowClosed(WindowEvent e) {}
 			
 			@Override
