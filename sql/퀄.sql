@@ -31,7 +31,7 @@ INSERT INTO Student VALUES ('0034567', '김철수', '0000000002', null);
 INSERT INTO Student VALUES ('0123123', '율곡이이', '0000000003', null);
 
 
-
+DELETE FROM Student;
 
 --책 정보
 
@@ -73,7 +73,7 @@ SELECT Student_dept FROM Student
 GROUP BY Student_dept;
 
 
-
+DELETE FROM BookRental;
 
 
 
@@ -178,7 +178,7 @@ AND Student.Student_dept = Majors.Major_id
 AND Majors.Major_name = '멀티미디어'
 
 
-
+-- 학생 등록 쿼리
 DELIMITER //
 CREATE PROCEDURE Insert_Student(_STUDENTID CHAR(7), _STUDENTNAME VARCHAR(10), _STUDENTMAJORID CHAR(10), _STUDENTADDR VARCHAR(100))
 BEGIN
@@ -221,10 +221,96 @@ END;
 //
 DELIMITER ;
 
+-- 학생 수정 쿼리
+DELIMITER 
+//
+CREATE PROCEDURE update_Student(_STUDENTID CHAR(7), _STUDENTNAME VARCHAR(10), _STUDENTDEPT CHAR(10), _STUDENTADDR VARCHAR(100), OUT _RESULT INT)
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE sDept CHAR(10);
+	DECLARE subjId INT;
+	
+	DECLARE openCursor CURSOR(p_STUDENTDEPT VARCHAR(10)) FOR SELECT Subjects.Subject_id FROM Subjects WHERE Subjects.Subject_majId = p_STUDENTDEPT;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+	
+	DECLARE exit handler FOR SQLEXCEPTION
+		BEGIN
+			ROLLBACK;
+			SET _RESULT = -1;
+		END;
+		
+		START TRANSACTION;
+		
+			SET sDept = (SELECT Student_dept FROM Student WHERE Student_id = _STUDENTID);
+			
+			IF sDept <=> _STUDENTDEPT THEN
+				UPDATE Student SET Student_name = _STUDENTNAME, Student_address = _STUDENTADDR WHERE Student_id = _STUDENTID;
+			ELSE
+				OPEN openCursor(_STUDENTDEPT);
+				UPDATE Student SET Student_name = _STUDENTNAME, Student_dept = _STUDENTDEPT, Student_address = _STUDENTADDR WHERE Student_id = _STUDENTID;
+				
+				DELETE FROM Grades WHERE Grade_studentId = _STUDENTID;
+				
+				read_loop: LOOP
+				
+				FETCH openCursor INTO subjId;
+				
+				IF done THEN
+					LEAVE read_loop;
+				END IF;
+				
+				INSERT INTO Grades(Grade_studentId, Grade_SubjId, Grade_rank) VALUES (_STUDENTID, subjId, DEFAULT);			
+				END LOOP;
+			
+				CLOSE openCursor;
+			END IF;
+		
+	COMMIT;
+	SET _RESULT = 0;
+END;
+//
+DELIMITER ;
 
 
+-- 학생 삭제 쿼리
+DELIMITER 
+//
+CREATE PROCEDURE delete_Student(_STUDENTID CHAR(7))
+BEGIN
+	DECLARE sDept CHAR(10);
+	DECLARE exit handler FOR SQLEXCEPTION
+		BEGIN
+			ROLLBACK;
+		END;
+		
+		START TRANSACTION;
+		
+			DELETE FROM Grades WHERE Grade_studentId = _STUDENTID;
+			
+			DELETE FROM Student WHERE Student_id = _STUDENTID;
+		
+	COMMIT;
+END;
+//
+DELIMITER ;
+
+CALL delete_Student('2222222');
+
+
+drop PROCEDURE delete_Student;
+
+CALL update_Student('2222222', '유관순', '0000000010', '강원도 정동', @sel);
+SELECT @sel;
+
+SELECT * FROM Grades WHERE Grade_studentId = 2222222;
+
+	UPDATE Grades SET Grade_SubjId = subjId WHERE Grade_studentId = _STUDENTID;
 
 SELECT * FROM Grades;
+
+DELETE FROM Grades WHERE Grade_studentId = 2222222;
+
+DELETE FROM Student WHERE Student_id = 2222222;
 
 CALL Insert_Student('4213256', '유관순', '0000000001', '강원도 정동진');
 SELECT @RESULT;

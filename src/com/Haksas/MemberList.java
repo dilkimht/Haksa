@@ -107,11 +107,18 @@ public class MemberList  extends JPanel {
 		
 		
 		String colName [] = {"학번", "이름", "학과", "주소", ""};
-		model = new DefaultTableModel(colName, 0);
+		model = new DefaultTableModel(colName, 0) {
+			private static final long serialVersionUID = 6635L;
+			public boolean isCellEditable(int i, int c){ return false; } // 컬럼에서 수정불가
+		};
 		table = new JTable(model);
-		// ���̺� ������
-		table.getColumnModel().getColumn(4).setMinWidth(0); 
+		// 컬럼 숨기기
+		table.getColumnModel().getColumn(4).setWidth(0);
+		table.getColumnModel().getColumn(4).setMinWidth(0);
 		table.getColumnModel().getColumn(4).setMaxWidth(0);
+		//컬럼 이동 막기
+		table.getTableHeader().setReorderingAllowed(false);
+		table.getTableHeader().setResizingAllowed(false);
 		table.setPreferredScrollableViewportSize(new Dimension(350, 270));
 		add(new JScrollPane(table));
 		
@@ -142,7 +149,7 @@ public class MemberList  extends JPanel {
 				tf_name.setText(name);
 				tf_dept.setText(dept);
 				tf_address.setText(address);
-				//System.out.println(majorNumber);
+				
 				
 			}
 		});
@@ -282,15 +289,17 @@ public class MemberList  extends JPanel {
 				break;
 			case UPDATE:
 				try {
-					rs = stmt.executeQuery("update Student set Student_name = '"
-							+ tf_name.getText() +"', Student_dept = '"+ majorNumber + "', Student_address = '" + tf_address.getText() + "' where Student_id = '" + tf_id.getText() + "'");
+					int iResult = 0;
+					stmt.executeUpdate("CALL Update_Student('"
+							+ tf_id.getText() +"', '"+ tf_name.getText() + "', '" + majorNumber + "', '" + tf_address.getText() + "', @" + iResult +")");
+					
 				} catch (Exception e2) {
 					// TODO: handle exception
 				}
 				break;
 			case DELETE:
 				try {
-					rs = stmt.executeQuery("delete from Student where Student_id = '" + tf_id.getText() + "'");
+					rs = stmt.executeQuery("CALL delete_Student('" + tf_id.getText() + "')");
 				} catch (Exception e2) {
 					// TODO: handle exception
 				}
@@ -338,8 +347,14 @@ public class MemberList  extends JPanel {
 			dialogPanel.add(tf_major);
 			
 			String colName [] = {"학과번호", "학과"};
-			majorModel = new DefaultTableModel(colName, 0);
+			majorModel = new DefaultTableModel(colName, 0){
+				private static final long serialVersionUID = 6605L;
+				public boolean isCellEditable(int i, int c){ return false; }
+			};
 			majorTable = new JTable(majorModel);
+			// 컬럼 크기 변경 불가
+			majorTable.getTableHeader().setReorderingAllowed(false);
+			majorTable.getTableHeader().setResizingAllowed(false);
 			majorTable.setPreferredScrollableViewportSize(new Dimension(265, 200));
 			
 			majorTable.addMouseListener(new MouseListener() {
@@ -382,11 +397,8 @@ public class MemberList  extends JPanel {
 					if(tf_major.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "학과가 선택되지 않았습니다.", "Message", JOptionPane.ERROR_MESSAGE);
 					} else {
-						MemberThis.tf_id.setText("");
-						MemberThis.tf_name.setText("");
 						MemberThis.tf_dept.setText(tf_major.getText());
-						MemberThis.tf_address.setText("");
-						System.out.println(majorNumber);
+						
 						setVisible(false);
 					}
 					

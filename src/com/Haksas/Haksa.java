@@ -99,18 +99,32 @@ public class Haksa extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				mainPanel.removeAll();// ��� ������Ʈ �����
-				mainPanel.revalidate();// �ٽ� Ȱ��ȭ
-				mainPanel.repaint(); // �ٽñ׸���
+				mainPanel.removeAll();
+				mainPanel.revalidate();
+				mainPanel.repaint();
 				mainPanel.setLayout(null);
 				
-				mainPanel.add(new MemberList(myThis,conn));
+				mainPanel.add(new MemberList(myThis, conn));
 				setSize(400, 520);
 			}
 		});
 		studentMenu.add(item_hakseng);
-		
-		studentMenu.add(new JMenuItem("수강신청"));
+		JMenuItem item_Reg = new JMenuItem("수강신청");
+		studentMenu.add(item_Reg);
+		item_Reg.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				mainPanel.removeAll();
+				mainPanel.revalidate();
+				mainPanel.repaint();
+				mainPanel.setLayout(null);
+				
+				mainPanel.add(new Registration(myThis, conn));
+				setSize(400, 520);
+			}
+		});
 		
 		JMenu rentalMenu = new JMenu("도서관리");
 		
