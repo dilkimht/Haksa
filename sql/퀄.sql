@@ -30,7 +30,7 @@ INSERT INTO Student VALUES ('0034567', '김철수', '0000000002', null);
 
 INSERT INTO Student VALUES ('0123123', '율곡이이', '0000000003', null);
 
-
+Select Student.Student_id, Student.Student_name, Majors.Major_name from Student, Majors where Student.Student_dept = Majors.Major_id and Student_name = '유관순';
 DELETE FROM Student;
 
 --책 정보
@@ -149,6 +149,14 @@ CREATE TABLE Subjects(
 );
 
 SELECT * FROM Subjects;
+
+
+
+
+
+
+
+SELECT Subject_name FROM Subjects WHERE Subject_majId = '';
 
 DROP TABLE Subjects;
 
@@ -327,9 +335,27 @@ AND br.RentBook_No = b.Book_no
 AND s.Student_dept = '전자공학';
 
 
+DELIMITER //
+CREATE PROCEDURE Select_Subject(_STUDENTID CHAR(7), _STUDENTNAME VARCHAR(10))
+BEGIN
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE majId CHAR(10);
+	
+	IF _STUDENTID IS NULL THEN
+		SET majId := (SELECT Student_dept FROM Student WHERE Student_name = _STUDENTNAME);
+	ELSE
+		SET majId := (SELECT Student_dept FROM Student WHERE Student_id = _STUDENTID);
+	END IF;
+	
+	SELECT Subject_name, Subject_id FROM Subjects WHERE Subject_majId = majId;
+	 
+END;
+//
+DELIMITER ;
 
+DROP PROCEDURE Select_Subject;
 
-
+CALL Select_Subject(NULL, '유관순');
 
 --------------------------------- 테스트 예제 샘플 --------------------------------------
 
