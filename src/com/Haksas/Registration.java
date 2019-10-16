@@ -1,5 +1,6 @@
 package com.Haksas;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
@@ -18,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -162,6 +164,7 @@ public class Registration extends JPanel{
 
 			}
 		});
+		
 		add(btn_prov);
 		String colName2 [] = {"등록", ""};
 		AfterModel = new DefaultTableModel(colName2, 0) {
@@ -182,8 +185,10 @@ public class Registration extends JPanel{
 		
 		AfterTable.setPreferredScrollableViewportSize(new Dimension(160, 340));
 		add(new JScrollPane(AfterTable));
-		//setBorder(new LineBorder(Color.BLACK));
-		setSize(393, 466);
+
+		setBorder(new LineBorder(Color.BLACK));
+		setLocation(100, 40);
+		setSize(384, 460);
 		setVisible(true);
 	}
 	

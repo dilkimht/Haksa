@@ -1,10 +1,12 @@
 package com.Haksas;
 
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.Statement;
 
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 
 public class GradeAdd extends JPanel {
@@ -19,8 +21,8 @@ public class GradeAdd extends JPanel {
 		
 		
 		
-		//setBorder(new LineBorder(Color.BLACK));
-		setSize(584, 438);
+		setBorder(new LineBorder(Color.BLACK));
+		setSize(584, 439);
 		setVisible(true);
 	}
 	
