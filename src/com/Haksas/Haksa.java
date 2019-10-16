@@ -52,7 +52,7 @@ public class Haksa extends JFrame{
 		CreateMenu(this, mainPanel, myHaksa);
 		
 		
-		
+		setResizable(false);
 		setSize(400, 520);
 		setVisible(true);
 		

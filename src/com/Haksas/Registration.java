@@ -1,6 +1,5 @@
 package com.Haksas;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Insets;
@@ -10,7 +9,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -20,7 +18,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -87,7 +84,7 @@ public class Registration extends JPanel{
 		tf_MemberName = new JTextField(10);
 		add(tf_MemberName);
 		
-		JLabel label_Re2 = new JLabel("                                                                  ");
+		JLabel label_Re2 = new JLabel("                                                                      ");
 		add(label_Re2);
 		JLabel label_Memberdept = new JLabel("학과");
 		add(label_Memberdept);
@@ -185,8 +182,8 @@ public class Registration extends JPanel{
 		
 		AfterTable.setPreferredScrollableViewportSize(new Dimension(160, 340));
 		add(new JScrollPane(AfterTable));
-		setBorder(new LineBorder(Color.BLACK));
-		setSize(384, 460);
+		//setBorder(new LineBorder(Color.BLACK));
+		setSize(393, 466);
 		setVisible(true);
 	}
 	
