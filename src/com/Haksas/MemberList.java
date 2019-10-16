@@ -1,16 +1,22 @@
 package com.Haksas;
 
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -19,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -27,6 +34,9 @@ public class MemberList  extends JPanel {
 	Connection conn = null;
 	Statement stmt = null;
 	Haksa myThis = null;
+	
+	ImageIcon img = null;
+	
 	DefaultTableModel model = null;
 	JTable table = null;
 	
@@ -48,9 +58,10 @@ public class MemberList  extends JPanel {
 		this.conn = conn;
 		this.myThis = myThis;
 		
+		
 		setLayout(new FlowLayout());
 		
-	
+		
 
 		add(new JLabel("학번"));
 		tf_id = new JTextField(23);
@@ -234,10 +245,13 @@ public class MemberList  extends JPanel {
 		
 		list(CRUD.SELECT, null);
 		
-		
-		setSize(380, 520);
+		setBorder(new LineBorder(Color.BLACK));
+		setLocation(100, 40);
+		setSize(380, 450);
 		setVisible(true);
 	}
+	
+	
 	
 	public void list(CRUD type, String where) {
 		

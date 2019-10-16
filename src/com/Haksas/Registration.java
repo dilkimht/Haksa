@@ -165,6 +165,7 @@ public class Registration extends JPanel{
 
 			}
 		});
+		
 		add(btn_prov);
 		String colName2 [] = {"등록", ""};
 		AfterModel = new DefaultTableModel(colName2, 0) {
@@ -186,6 +187,7 @@ public class Registration extends JPanel{
 		AfterTable.setPreferredScrollableViewportSize(new Dimension(160, 340));
 		add(new JScrollPane(AfterTable));
 		setBorder(new LineBorder(Color.BLACK));
+		setLocation(100, 40);
 		setSize(384, 460);
 		setVisible(true);
 	}
