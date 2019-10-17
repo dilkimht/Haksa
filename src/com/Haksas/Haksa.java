@@ -1,36 +1,34 @@
 package com.Haksas;
 
 
+import java.awt.Color;
 import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 
 
 public class Haksa extends JFrame{
 	private static final long serialVersionUID = 12L;
 	Connection conn = null;
-	Background background = null;
-	JPanel mainPanel = new JPanel();
-	BufferedImage img = null;
+	
+	JPanel mainPanel = null;
+	BufferedImage imgs = null;
 	Container cPane = null;
 	
 	public Haksa() {
@@ -38,25 +36,29 @@ public class Haksa extends JFrame{
 		this.setTitle("학사관리");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		cPane = getContentPane();
-		try {
-			img = ImageIO.read(new File("img/background.jpg"));
-		} catch (Exception e) {
-			// TODO: handle exception
-			JOptionPane.showMessageDialog(null, "이미지 불러오기 실패");
-			System.exit(0);
-		}
-		ImageIcon iconImg = new ImageIcon("img/background.jpg");
-		JLabel mains = new JLabel(iconImg);
-		cPane.add(mains);
-		//background = new Background(img);
+		setLayout(null);
 		
-		//add(background);
-		//background.add(mainPanel);
 		
-		cPane.add(mainPanel);
+		mainPanel = new JPanel() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			protected void paintComponent(Graphics g) {
+				// TODO Auto-generated method stub
+				ImageIcon iconImg = new ImageIcon("img/background.jpg");
+				Image originImg = iconImg.getImage(); 
+				
+				Image changedImg= originImg.getScaledInstance(595, 545, Image.SCALE_SMOOTH );
+				
+				ImageIcon Icon = new ImageIcon(changedImg);
+				
+				g.drawImage(Icon.getImage(), 0, 0, null);
+				 setOpaque(false);
+				super.paintComponent(g);
+			}
+			
+		};
 		
-		System.out.println();
 		
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
@@ -69,9 +71,9 @@ public class Haksa extends JFrame{
 			// TODO: handle exception
 		}
 		
-		//createInstance();
-		
-		
+		mainPanel.setBounds(0, 0, 600, 600);
+		mainPanel.setBorder(new LineBorder(Color.BLACK));
+		add(mainPanel);
 		CreateMenu(this, mainPanel);
 		
 		
@@ -127,6 +129,7 @@ public class Haksa extends JFrame{
 				mainPanel.revalidate();
 				mainPanel.repaint();
 				mainPanel.setLayout(null);
+
 				
 				mainPanel.add(new MemberList(myThis, conn));
 				//setSize(400, 520);
@@ -208,8 +211,6 @@ public class Haksa extends JFrame{
 				mainPanel.repaint(); 
 				mainPanel.setLayout(null);
 		
-				
-				//mainPanel.setBorder(new LineBorder(Color.RED));
 				mainPanel.add(new GradeAdd(conn));
 				
 				myThis.setSize(600, 600);
@@ -224,32 +225,6 @@ public class Haksa extends JFrame{
 		mb.add(GradeMenu);
 		
 		setJMenuBar(mb);
-	}
-	
-	class Background extends JPanel {
-		private static final long serialVersionUID = 1L;
-		BufferedImage img = null;
-		
-		public Background(BufferedImage imgs) {
-			// TODO Auto-generated constructor stub
-			this.img = imgs;
-			setLayout(new FlowLayout());
-			
-			add(new JLabel("학번"));
-			
-			
-			
-			setSize(600, 600);
-			setVisible(true);
-		}
-		
-		@Override
-		public void paint(Graphics g) {
-			// TODO Auto-generated method stub
-			g.drawImage(img, 0, 0, 600, 600, null);
-			super.paint(g);
-		}
-		
 	}
 	public static void main(String[] args) {
 		new Haksa();

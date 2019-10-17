@@ -3,6 +3,8 @@ package com.Haksas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,6 +31,9 @@ public class Registration extends JPanel{
 	Connection conn = null;
 	Statement stmt = null;
 	Haksa myThis = null;
+	
+	JPanel myPanel = new JPanel();
+	
 	DefaultTableModel beforeModel = null;
 	JTable beforeTable = null;
 	DefaultTableModel AfterModel = null;
@@ -37,18 +43,26 @@ public class Registration extends JPanel{
 	JTextField tf_MemberName = null;
 	JTextField tf_Memberdept = null;
 	
-	private enum SUBJ { SELECT, STUDENTLIST, UPDATE, DELETE };
+	private enum SUBJ { SELECT, STUDENTLIST, REGIST, DELETE };
 	
 	public Registration(Haksa myThis, Connection conn) {
 		// TODO Auto-generated constructor stub
 		this.myThis = myThis;
 		this.conn = conn;
-		setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		
+		setLayout(null);
+		myPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		myPanel.setSize(384, 460);
+		myPanel.setLocation(30, 20);
+		myPanel.setOpaque(false);
+		myPanel.setVisible(true);
 		
 		JLabel label_MemberNo = new JLabel("학번");
-		add(label_MemberNo);
+		myPanel.add(label_MemberNo);
 		tf_MemberNo = new JTextField(10);
-		add(tf_MemberNo);
+		myPanel.add(tf_MemberNo);
 		JButton btn_Clear = new JButton("비우기");
 		btn_Clear.addActionListener(new ActionListener() {
 			
@@ -58,11 +72,12 @@ public class Registration extends JPanel{
 				tf_MemberName.setText("");
 				tf_Memberdept.setText("");
 				beforeModel.setNumRows(0);
+				AfterModel.setNumRows(0);
 			}
 		});
-		add(btn_Clear);
+		myPanel.add(btn_Clear);
 		JLabel label_Re1 = new JLabel("                           ");
-		add(label_Re1);
+		myPanel.add(label_Re1);
 		JButton btn_Select = new JButton("검색");
 		btn_Select.addActionListener(new ActionListener() {
 			
@@ -80,32 +95,52 @@ public class Registration extends JPanel{
 				
 			}
 		});
-		add(btn_Select);
+		myPanel.add(btn_Select);
 		JLabel label_MemberName = new JLabel("이름");
-		add(label_MemberName);
+		myPanel.add(label_MemberName);
 		tf_MemberName = new JTextField(10);
-		add(tf_MemberName);
+		myPanel.add(tf_MemberName);
 		
 		JLabel label_Re2 = new JLabel("                                                                      ");
-		add(label_Re2);
+		myPanel.add(label_Re2);
 		JLabel label_Memberdept = new JLabel("학과");
-		add(label_Memberdept);
+		myPanel.add(label_Memberdept);
 		tf_Memberdept = new JTextField(15);
 		tf_Memberdept.setEditable(false);
-		add(tf_Memberdept);
+		myPanel.add(tf_Memberdept);
 		JLabel label_Re3 = new JLabel("                          ");
-		add(label_Re3);
+		myPanel.add(label_Re3);
 		JButton btn_Regist = new JButton("수강신청");
 		btn_Regist.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				
+				int result = JOptionPane.showConfirmDialog(null, "이대로 수강신청을 하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
+				switch(result) {
+				case JOptionPane.OK_OPTION:
+					JOptionPane.showMessageDialog(null, "수강신청이 완료되었습니다.", "Message", JOptionPane.OK_OPTION);
+					
+					System.out.println("asdasdsad");
+					int numRows = AfterTable.getRowCount();
+					
+					// 여기 에러 찾아봐야됨
+					 for(int i=0; i<numRows ; i++ ) {
+						String row = (String)AfterModel.getValueAt(i, 1);
+						
+						String sql = "INSERT INTO Grades(Grade_studentId, Grade_SubjId, Grade_rank) VALUES ('" + tf_MemberNo.getText() + "', '" + row + "', DEFAULT);";
+						query(SUBJ.REGIST, sql);
+					
+					 }
+					 AfterModel.setNumRows(0);
+					 beforeModel.setNumRows(0);
+					break;
+				case JOptionPane.NO_OPTION: return;
+				}
 			}
 		});
 		
-		add(btn_Regist);
+		myPanel.add(btn_Regist);
 		String colName1 [] = {"학과", ""};
 		beforeModel = new DefaultTableModel(colName1, 0) {
 			private static final long serialVersionUID = 6635L;
@@ -123,7 +158,7 @@ public class Registration extends JPanel{
 		beforeTable.setRowSelectionAllowed(true);
 		beforeTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		beforeTable.setPreferredScrollableViewportSize(new Dimension(160, 340));
-		add(new JScrollPane(beforeTable));
+		myPanel.add(new JScrollPane(beforeTable));
 		
 		JButton btn_next = new JButton("◀");
 		btn_next.setMargin(new Insets(0, 0, 0, 0));
@@ -143,7 +178,7 @@ public class Registration extends JPanel{
 				 }
 			}
 		});
-		add(btn_next);
+		myPanel.add(btn_next);
 		JButton btn_prov = new JButton("▶");
 		btn_prov.setMargin(new Insets(0, 0, 0, 0));
 		btn_prov.addActionListener(new ActionListener() {
@@ -165,7 +200,7 @@ public class Registration extends JPanel{
 			}
 		});
 		
-		add(btn_prov);
+		myPanel.add(btn_prov);
 		String colName2 [] = {"등록", ""};
 		AfterModel = new DefaultTableModel(colName2, 0) {
 			private static final long serialVersionUID = 6635L;
@@ -184,12 +219,28 @@ public class Registration extends JPanel{
 		AfterTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		
 		AfterTable.setPreferredScrollableViewportSize(new Dimension(160, 340));
-		add(new JScrollPane(AfterTable));
+		myPanel.add(new JScrollPane(AfterTable));
 
+		add(myPanel);
 		setBorder(new LineBorder(Color.BLACK));
-		setLocation(100, 40);
-		setSize(384, 460);
+		setLocation(65, 20);
+		setSize(450, 500);
 		setVisible(true);
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		// TODO Auto-generated method stub
+		ImageIcon iconImg = new ImageIcon("img/curlyleafframe.png");
+		Image originImg = iconImg.getImage(); 
+		
+		Image changedImg= originImg.getScaledInstance(450, 500, Image.SCALE_SMOOTH );
+		
+		ImageIcon Icon = new ImageIcon(changedImg);
+		
+		g.drawImage(Icon.getImage(), 0, 0, null);
+		setOpaque(false);
+		super.paintComponent(g);
 	}
 	
 	public void query(SUBJ vSubj , String sql) {
@@ -202,8 +253,9 @@ public class Registration extends JPanel{
 			case SELECT:
 				rs = stmt.executeQuery(sql);
 				while(rs.next()) {
-					String [] row = new String[1];
+					String [] row = new String[2];
 					row[0] = rs.getString("Subject_name");
+					row[1] = rs.getString("Subject_id");
 					beforeModel.addRow(row);
 				}
 				ResultSet rs1 = null;
@@ -223,8 +275,10 @@ public class Registration extends JPanel{
 				break;
 			case STUDENTLIST:
 				
+				
 				break;
-			case UPDATE:
+			case REGIST:
+				stmt.executeUpdate(sql);
 				break;
 			case DELETE:
 				break;

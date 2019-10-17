@@ -1,8 +1,11 @@
 package com.Haksas;
 
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -11,6 +14,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -19,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -27,6 +32,9 @@ public class MemberList  extends JPanel {
 	Connection conn = null;
 	Statement stmt = null;
 	Haksa myThis = null;
+	
+	JPanel myPanel = new JPanel();
+	
 	DefaultTableModel model = null;
 	JTable table = null;
 	
@@ -48,13 +56,18 @@ public class MemberList  extends JPanel {
 		this.conn = conn;
 		this.myThis = myThis;
 		
-		setLayout(new FlowLayout());
+		setLayout(null);
+		setBackground(Color.WHITE);
+		myPanel.setLayout(new FlowLayout());
 		
-	
+		myPanel.setSize(380, 520);
+		myPanel.setLocation(10, 25);
+		myPanel.setOpaque(false);
+		myPanel.setVisible(true);
 
-		add(new JLabel("학번"));
+		myPanel.add(new JLabel("학번"));
 		tf_id = new JTextField(23);
-		add(tf_id);
+		myPanel.add(tf_id);
 		
 		JButton btnSelect = new JButton("검색");
 		btnSelect.addActionListener(new ActionListener() {
@@ -73,12 +86,12 @@ public class MemberList  extends JPanel {
 				}
 			}
 		});
-		add(btnSelect);
+		myPanel.add(btnSelect);
 		
 		
-		add(new JLabel("이름"));
+		myPanel.add(new JLabel("이름"));
 		tf_name = new JTextField(21);
-		add(tf_name);
+		myPanel.add(tf_name);
 		
 		DialogMajors dMajor = new DialogMajors(myThis, this, "학과", conn);
 		JButton btnMajor = new JButton("학과검색");
@@ -93,16 +106,16 @@ public class MemberList  extends JPanel {
 				dMajor.setVisible(true);
 			}
 		});
-		add(btnMajor);
+		myPanel.add(btnMajor);
 		
-		add(new JLabel("학과"));
+		myPanel.add(new JLabel("학과"));
 		tf_dept = new JTextField(29);
 		tf_dept.setEditable(false);
-		add(tf_dept);
+		myPanel.add(tf_dept);
 		
-		add(new JLabel("주소"));
+		myPanel.add(new JLabel("주소"));
 		tf_address = new JTextField(29);
-		add(tf_address);
+		myPanel.add(tf_address);
 		
 		
 		
@@ -120,7 +133,7 @@ public class MemberList  extends JPanel {
 		table.getTableHeader().setReorderingAllowed(false);
 		table.getTableHeader().setResizingAllowed(false);
 		table.setPreferredScrollableViewportSize(new Dimension(350, 270));
-		add(new JScrollPane(table));
+		myPanel.add(new JScrollPane(table));
 		
 		table.addMouseListener(new MouseListener() {
 			
@@ -176,7 +189,7 @@ public class MemberList  extends JPanel {
 				}
 			}
 		});
-		add(btnInsert);
+		myPanel.add(btnInsert);
 		JButton btnList = new JButton("목록");
 		btnList.addActionListener(new ActionListener() {
 			
@@ -190,7 +203,7 @@ public class MemberList  extends JPanel {
 				tf_address.setText("");
 			}
 		});
-		add(btnList);
+		myPanel.add(btnList);
 		JButton btnUpdate = new JButton("수정");
 		btnUpdate.addActionListener(new ActionListener() {
 			
@@ -210,7 +223,7 @@ public class MemberList  extends JPanel {
 				}
 			}
 		});
-		add(btnUpdate);
+		myPanel.add(btnUpdate);
 		JButton btnDelete = new JButton("삭제");
 		btnDelete.addActionListener(new ActionListener() {
 			
@@ -230,13 +243,29 @@ public class MemberList  extends JPanel {
 				}
 			}
 		});
-		add(btnDelete);
+		myPanel.add(btnDelete);
+		
+		add(myPanel);
 		
 		list(CRUD.SELECT, null);
 		
-		
-		setSize(380, 520);
+		setLocation(90, 20);
+		setSize(400, 500);
 		setVisible(true);
+	}
+	@Override
+	protected void paintComponent(Graphics g) {
+		// TODO Auto-generated method stub
+		ImageIcon iconImg = new ImageIcon("img/curlyleafframe.png");
+		Image originImg = iconImg.getImage(); 
+		
+		Image changedImg= originImg.getScaledInstance(400, 500, Image.SCALE_SMOOTH );
+		
+		ImageIcon Icon = new ImageIcon(changedImg);
+		
+		g.drawImage(Icon.getImage(), 0, 0, null);
+		setOpaque(false);
+		super.paintComponent(g);
 	}
 	
 	public void list(CRUD type, String where) {
@@ -281,7 +310,7 @@ public class MemberList  extends JPanel {
 				break;
 			case INSERT:
 				try {
-					stmt.executeUpdate("CALL Insert_Student('"
+					stmt.executeUpdate("INSERT INTO Student(Student_id, Student_name, Student_dept, Student_address) VALUES ('"
 							+ 	tf_id.getText() +"', '"+ tf_name.getText() + "', '" + majorNumber + "', '" + tf_address.getText() + "')");
 				} catch (Exception e2) {
 					// TODO: handle exception
@@ -289,9 +318,7 @@ public class MemberList  extends JPanel {
 				break;
 			case UPDATE:
 				try {
-					int iResult = 0;
-					stmt.executeUpdate("CALL Update_Student('"
-							+ tf_id.getText() +"', '"+ tf_name.getText() + "', '" + majorNumber + "', '" + tf_address.getText() + "', @" + iResult +")");
+					stmt.executeUpdate("UPDATE Student SET Student_name = '" + tf_name.getText() + "', Student_dept = '" + majorNumber + "', Student_address = '" + tf_address.getText() + "' WHERE Student_id = '" + tf_id.getText() + "'");
 					
 				} catch (Exception e2) {
 					// TODO: handle exception
