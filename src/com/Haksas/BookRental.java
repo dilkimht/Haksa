@@ -38,7 +38,7 @@ public class BookRental extends JPanel{
 	DefaultTableModel model2 = null;
 	JTable table2 = null;
 	
-	private enum RentalStatus { SEARCH1, SEARCH2, LOAN, RETURN};
+	private enum RentalStatus { BOOKSELECT, SEARCH2, LOAN, RETURN};
 	
 	private JTextField tf_hakbun = null;
 	
@@ -52,7 +52,9 @@ public class BookRental extends JPanel{
 		
 		setLayout(null);
 		this.add(pane1);
-		this.add(pane2);
+		//this.add(pane2);
+		
+		pane1.setBorder(new LineBorder(Color.BLUE));
 		
 		
 		pane1.setLayout(new FlowLayout());
@@ -90,20 +92,14 @@ public class BookRental extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				query(RentalStatus.SEARCH1, 0, null);
+				//query(RentalStatus.SEARCH1, 0, null);
 			}
 		});
 		pane1.add(btnList1);
 		
-		JLabel label_dept = new JLabel("학과");
-		pane1.add(label_dept);
-		
-		JTextField tf_dept = new JTextField(18);
-		pane1.add(tf_dept);
 		
 		
-		
-		String colName1 [] = {"학번", "이름", "학과"};
+		String colName1 [] = {"책번호", "책이름", "반납여부"};
 		model1 = new DefaultTableModel(colName1, 0);
 		table1 = new JTable(model1);
 		// ���̺� ������
@@ -153,11 +149,9 @@ public class BookRental extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if(!tf_hakbun.getText().equals("")) {
-					query(RentalStatus.SEARCH1, 1, tf_hakbun.getText());
+					//query(RentalStatus.SEARCH1, 1, tf_hakbun.getText());
 				} else if(!tf_name.getText().equals("")) {
-					query(RentalStatus.SEARCH1, 2, tf_name.getText());
-				} else if(!tf_dept.getText().equals("")) {
-					query(RentalStatus.SEARCH1, 3, tf_dept.getText());
+					//query(RentalStatus.SEARCH1, 2, tf_name.getText());
 				}
 			}
 		});
@@ -199,7 +193,7 @@ public class BookRental extends JPanel{
 				
 				tf_hakbun.setText(id);
 				tf_name.setText(name);
-				tf_dept.setText(dept);
+				
 			}
 		});
 		
@@ -230,8 +224,8 @@ public class BookRental extends JPanel{
 		});
 		
 		
-		query(RentalStatus.SEARCH1, 0, null);
-		query(RentalStatus.SEARCH2, 0, null);
+		query(RentalStatus.BOOKSELECT, 0, null);
+		//query(RentalStatus.SEARCH2, 0, null);
 
 		
 		JButton btnLoan = new JButton("대출");
@@ -254,7 +248,7 @@ public class BookRental extends JPanel{
 						model2.setNumRows(0);
 						tf_hakbun.setText("");
 						tf_name.setText("");
-						tf_dept.setText("");
+						
 						tf_bookNo.setText("");
 						tf_bookName.setText("");
 						break;
@@ -286,7 +280,7 @@ public class BookRental extends JPanel{
 						model2.setNumRows(0);
 						tf_hakbun.setText("");
 						tf_name.setText("");
-						tf_dept.setText("");
+						
 						tf_bookNo.setText("");
 						tf_bookName.setText("");
 						break;
@@ -309,27 +303,27 @@ public class BookRental extends JPanel{
 	private void query(RentalStatus status, int index, String inValue) {
 		ResultSet rs = null;
 		switch(status) {
-		case SEARCH1:
+		case BOOKSELECT:
 			model1.setNumRows(0);
 			try {
 				stmt = conn.createStatement();
-				if(inValue == null)
-					rs = stmt.executeQuery("Select * from Student");
-				else {
-					if(index == 1) {
-						rs = stmt.executeQuery("Select * from Student where Student_id = '" + inValue + "'");
-					} else if(index == 2) {
-						rs = stmt.executeQuery("Select * from Student where Student_name = '" + inValue + "'");
-					} else if(index == 3) {
-						rs = stmt.executeQuery("Select * from Student where Student_dept = '" + inValue + "'");
-					}
-				}
+				
+				rs = stmt.executeQuery("Select * from Books");
+//				else {
+//					if(index == 1) {
+//						rs = stmt.executeQuery("Select * from Student where Student_id = '" + inValue + "'");
+//					} else if(index == 2) {
+//						rs = stmt.executeQuery("Select * from Student where Student_name = '" + inValue + "'");
+//					} else if(index == 3) {
+//						rs = stmt.executeQuery("Select * from Student where Student_dept = '" + inValue + "'");
+//					}
+//				}
 					
 				while(rs.next()) {
 					String [] row = new String[3];
-					row[0] = rs.getString("Student_id");
-					row[1] = rs.getString("Student_name");
-					row[2] = rs.getString("Student_dept");
+					row[0] = rs.getString("Book_no");
+					row[1] = rs.getString("Book_title");
+					row[2] = rs.getString("Book_loan");
 					model1.addRow(row);
 				}
 				rs.close();

@@ -45,7 +45,7 @@ public class Haksa extends JFrame{
 			@Override
 			protected void paintComponent(Graphics g) {
 				// TODO Auto-generated method stub
-				ImageIcon iconImg = new ImageIcon("img/background.jpg");
+				ImageIcon iconImg = new ImageIcon("img/background.png");
 				Image originImg = iconImg.getImage(); 
 				
 				Image changedImg= originImg.getScaledInstance(595, 545, Image.SCALE_SMOOTH );

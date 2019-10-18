@@ -57,9 +57,9 @@ public class MemberList  extends JPanel {
 		this.myThis = myThis;
 		
 		setLayout(null);
-		setBackground(Color.WHITE);
-		myPanel.setLayout(new FlowLayout());
 		
+		myPanel.setLayout(new FlowLayout());
+		setBorder(new LineBorder(Color.BLACK));
 		myPanel.setSize(380, 520);
 		myPanel.setLocation(10, 25);
 		myPanel.setOpaque(false);
@@ -264,7 +264,7 @@ public class MemberList  extends JPanel {
 		ImageIcon Icon = new ImageIcon(changedImg);
 		
 		g.drawImage(Icon.getImage(), 0, 0, null);
-		setOpaque(false);
+		//setOpaque(false);
 		super.paintComponent(g);
 	}
 	

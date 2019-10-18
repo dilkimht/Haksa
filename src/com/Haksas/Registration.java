@@ -239,7 +239,7 @@ public class Registration extends JPanel{
 		ImageIcon Icon = new ImageIcon(changedImg);
 		
 		g.drawImage(Icon.getImage(), 0, 0, null);
-		setOpaque(false);
+		//setOpaque(false);
 		super.paintComponent(g);
 	}
 	
