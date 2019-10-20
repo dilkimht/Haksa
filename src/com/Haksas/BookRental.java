@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -38,7 +39,7 @@ public class BookRental extends JPanel{
 	DefaultTableModel model2 = null;
 	JTable table2 = null;
 	
-	private enum RentalStatus { BOOKSELECT, SEARCH2, LOAN, RETURN};
+	private enum RentalStatus { BOOKSELECT, STUDENTSELECT, LOAN, RETURN};
 	
 	private JTextField tf_hakbun = null;
 	
@@ -74,28 +75,35 @@ public class BookRental extends JPanel{
 		pane1.add(label_hakbun);
 		
 		tf_hakbun = new JTextField(12);
+		tf_hakbun.setEditable(false);
 		pane1.add(tf_hakbun);
 		
-		JButton btnSelect1 = new JButton("검색");
 		
+		
+		JButton btnSelect1 = new JButton("검색");
+		btnSelect1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String sql = "Select ";
+				
+				query(RentalStatus.STUDENTSELECT, sql);
+			}
+		});
 		pane1.add(btnSelect1);
 		
 		JLabel label_name = new JLabel("이름");
+		
 		pane1.add(label_name);
 		
 		JTextField tf_name = new JTextField(12);
 		pane1.add(tf_name);
 		
-		JButton btnList1 = new JButton("목록");
-		btnList1.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				//query(RentalStatus.SEARCH1, 0, null);
-			}
-		});
-		pane1.add(btnList1);
+		JLabel label_split1 = new JLabel("                    ");
+		
+		pane1.add(label_split1);
+		
 		
 		
 		
@@ -129,7 +137,7 @@ public class BookRental extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				query(RentalStatus.SEARCH2, 0, null);
+				//query(RentalStatus.SEARCH2, 0, null);
 			}
 		});
 		pane2.add(btnList2);
@@ -162,9 +170,9 @@ public class BookRental extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if(!tf_bookNo.getText().equals("")) {
-					query(RentalStatus.SEARCH2, 1, tf_bookNo.getText());
+					//query(RentalStatus.SEARCH2, 1, tf_bookNo.getText());
 				} else if(!tf_bookName.getText().equals("")) {
-					query(RentalStatus.SEARCH2, 2, tf_bookName.getText());
+					//query(RentalStatus.SEARCH2, 2, tf_bookName.getText());
 				}
 			}
 		});
@@ -224,7 +232,7 @@ public class BookRental extends JPanel{
 		});
 		
 		
-		query(RentalStatus.BOOKSELECT, 0, null);
+		query(RentalStatus.BOOKSELECT, null);
 		//query(RentalStatus.SEARCH2, 0, null);
 
 		
@@ -243,7 +251,7 @@ public class BookRental extends JPanel{
 					switch (result) {
 					case JOptionPane.OK_OPTION:
 						JOptionPane.showMessageDialog(null, "대출완료", "Message", JOptionPane.OK_OPTION);
-						query(RentalStatus.LOAN, 0, null);
+						//query(RentalStatus.LOAN, 0, null);
 						model1.setNumRows(0);
 						model2.setNumRows(0);
 						tf_hakbun.setText("");
@@ -275,7 +283,7 @@ public class BookRental extends JPanel{
 					switch (result) {
 					case JOptionPane.OK_OPTION:
 						JOptionPane.showMessageDialog(null, "반납이 완료되었습니다", "Message", JOptionPane.OK_OPTION);
-						query(RentalStatus.RETURN, 0, null);
+						//query(RentalStatus.RETURN, 0, null);
 						model1.setNumRows(0);
 						model2.setNumRows(0);
 						tf_hakbun.setText("");
@@ -300,7 +308,7 @@ public class BookRental extends JPanel{
 		setVisible(true);
 	}
 	
-	private void query(RentalStatus status, int index, String inValue) {
+	private void query(RentalStatus status, String sSql) {
 		ResultSet rs = null;
 		switch(status) {
 		case BOOKSELECT:
@@ -333,19 +341,19 @@ public class BookRental extends JPanel{
 			}
 			
 			break;
-		case SEARCH2:
+		case STUDENTSELECT:
 			model2.setNumRows(0);
 			try {
 				stmt = conn.createStatement();
-				if(inValue == null)
-					rs = stmt.executeQuery("Select * from Books");
-				else {
-					if(index == 1) {
-						rs = stmt.executeQuery("Select * from Books where Book_no = '" + inValue + "'");
-					} else if(index == 2) {
-						rs = stmt.executeQuery("Select * from Books where Book_title = '" + inValue + "'");
-					}
-				}
+//				if(inValue == null)
+//					rs = stmt.executeQuery("Select * from Books");
+//				else {
+//					if(index == 1) {
+//						rs = stmt.executeQuery("Select * from Books where Book_no = '" + inValue + "'");
+//					} else if(index == 2) {
+//						rs = stmt.executeQuery("Select * from Books where Book_title = '" + inValue + "'");
+//					}
+//				}
 				while(rs.next()) {
 					String [] row = new String[3];
 					row[0] = rs.getString("Book_no");
@@ -367,9 +375,9 @@ public class BookRental extends JPanel{
 			
 			try {
 				stmt = conn.createStatement();
-				if(inValue == null)
-					stmt.executeUpdate("insert into BookRental(RentStudent_id, RentBook_No, BookRental_Date, BookRental_loan) values('"+ tf_hakbun.getText() +"','" + tf_bookNo.getText() + "','" + time + "', '대출')");
-					stmt.executeUpdate("UPDATE Books SET Book_loan = 'N' WHERE Book_no = '" + tf_bookNo.getText() + "'");
+//				if(inValue == null)
+//					stmt.executeUpdate("insert into BookRental(RentStudent_id, RentBook_No, BookRental_Date, BookRental_loan) values('"+ tf_hakbun.getText() +"','" + tf_bookNo.getText() + "','" + time + "', '대출')");
+//					stmt.executeUpdate("UPDATE Books SET Book_loan = 'N' WHERE Book_no = '" + tf_bookNo.getText() + "'");
 			} catch (Exception e) {
 					// TODO: handle exception
 			}
@@ -377,9 +385,9 @@ public class BookRental extends JPanel{
 		case RETURN:
 			try {
 				stmt = conn.createStatement();
-				if(inValue == null)
-					stmt.executeUpdate("UPDATE BookRental SET BookRental_loan = '반납' WHERE RentBook_No = '" + tf_bookNo.getText() + "'");
-					stmt.executeUpdate("UPDATE Books SET Book_loan = 'Y' WHERE Book_no = '" + tf_bookNo.getText() + "'");
+//				if(inValue == null)
+//					stmt.executeUpdate("UPDATE BookRental SET BookRental_loan = '반납' WHERE RentBook_No = '" + tf_bookNo.getText() + "'");
+//					stmt.executeUpdate("UPDATE Books SET Book_loan = 'Y' WHERE Book_no = '" + tf_bookNo.getText() + "'");
 			} catch (Exception e) {
 					// TODO: handle exception
 			}
