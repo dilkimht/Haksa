@@ -73,18 +73,18 @@ public class BookRentalList extends JPanel{
 		
 	
 		
-		String colName [] = {"학번", "이름", "학과", "주소", "대여가능여부"};
+		String colName [] = {"학번", "이름", "학과", "주소", "대출일", "반납일", "대여여부"};
 		model = new DefaultTableModel(colName, 0);
 		table = new JTable(model);
 		// ���̺� ������
-		table.setPreferredScrollableViewportSize(new Dimension(500, 400));
+		table.setPreferredScrollableViewportSize(new Dimension(560, 400));
 		add(new JScrollPane(table));
 		
 		String query = "SELECT br.RentStudent_id, s.Student_name, b.Book_title, br.BookRental_Date, BookRental_loan FROM BookRental br, Student s, Books b WHERE br.RentStudent_id = s.Student_id AND br.RentBook_No = b.Book_no";
 		BookList(query);
 		
-		
-		setSize(520, 500);
+		setLocation(8, 20);
+		setSize(580, 500);
 		setVisible(true);
 	}
 	
@@ -93,11 +93,11 @@ public class BookRentalList extends JPanel{
 		try {
 			ResultSet rs = null;
 			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT Student_dept FROM Student GROUP BY Student_dept; ");
+			rs = stmt.executeQuery("SELECT Majors.Major_name FROM Student, Majors WHERE Majors.Major_id = Student.Student_dept GROUP BY Student_dept ");
 			
 			row.add("전체");
 			while(rs.next()) {
-				row.add(rs.getString("Student_dept"));
+				row.add(rs.getString("Major_name"));
 			}
 			
 			rs.close();

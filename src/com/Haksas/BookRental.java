@@ -10,20 +10,18 @@ import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+
+
 
 
 public class BookRental extends JPanel{
@@ -40,15 +38,16 @@ public class BookRental extends JPanel{
 	DefaultTableModel model2 = null;
 	JTable table2 = null;
 	
-	private enum RentalStatus { BOOKSELECT, STUDENTSELECT, LOAN, RETURN};
+	private enum RentalStatus { BOOKSELECT, STUDENTSELECT, BOOKSELECT1, LOAN, RETURN};
 	
 	private JTextField tf_hakbun = null;
 	
 	private JTextField tf_name = null;
 	
-	private JTextField tf_bookNo = null;
 	
 	private String Pivot = "";
+	
+	private String bookNo = "";
 	
 	public BookRental(Connection conn) {
 		// TODO Auto-generated constructor stub
@@ -58,7 +57,7 @@ public class BookRental extends JPanel{
 		this.add(pane1);
 		this.add(pane2);
 		
-		pane1.setBorder(new LineBorder(Color.BLUE));
+		pane1.setBorder(new LineBorder(Color.BLACK));
 		
 		
 		pane1.setLayout(new FlowLayout());
@@ -67,12 +66,12 @@ public class BookRental extends JPanel{
 		pane1.setVisible(true);
 		pane2.setLayout(new FlowLayout());
 		pane2.setLocation(290, 90);
-		pane2.setSize(220, 280);
-		pane2.setVisible(true);
+		pane2.setSize(220, 265);
+		pane2.setVisible(false);
 		
 	
 		//pane1.setBorder(new LineBorder(Color.RED));
-		pane2.setBorder(new LineBorder(Color.GREEN));
+		pane2.setBorder(new LineBorder(Color.BLACK));
 
 		JLabel label_hakbun = new JLabel("학번");
 		pane1.add(label_hakbun);
@@ -90,8 +89,8 @@ public class BookRental extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				String sql = "Select Student_id, Student_name from Student where Student_name ='" + tf_name.getText() + "'";
-				//System.out.println(tf_name.getText());
 				query(RentalStatus.STUDENTSELECT, sql);
+				
 			}
 		});
 		pane1.add(btnSelect1);
@@ -137,59 +136,35 @@ public class BookRental extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				//query(RentalStatus.SEARCH2, 0, null);
-			}
-		});
-		pane2.add(btnSelect2);
-		JLabel label_split2 = new JLabel("|                                            |");
-		
-		pane2.add(label_split2);
-		
-//		JButton btnList2 = new JButton("목록");
-//		btnList2.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// TODO Auto-generated method stub
-//				//query(RentalStatus.SEARCH2, 0, null);
-//			}
-//		});
-//		pane2.add(btnList2);
-				
-		String colName2 [] = {"대출일", "반납일"};
-		model2 = new DefaultTableModel(colName2, 0);
-		table2 = new JTable(model2);
-		// ���̺� ������
-		table2.setPreferredScrollableViewportSize(new Dimension(200, 200));
-		pane2.add(new JScrollPane(table2));
-
-		
-		
-		btnSelect1.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				if(!tf_hakbun.getText().equals("")) {
-					//query(RentalStatus.SEARCH1, 1, tf_hakbun.getText());
-				} else if(!tf_name.getText().equals("")) {
-					//query(RentalStatus.SEARCH1, 2, tf_name.getText());
+				if(tf_name.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "회원을 찾지 않았습니다.", "Message", JOptionPane.ERROR_MESSAGE);
+				} else {
+					if(Pivot.equals("대출") && !Pivot.equals("")) {
+						JOptionPane.showMessageDialog(null, "책이 없습니다.", "Message", JOptionPane.ERROR_MESSAGE);
+					} else {
+						String sql = "INSERT INTO BookRental(RentStudent_id, RentBook_No, BookRental_bDate, BookRental_aDate, BookRental_loan) VALUES('" + tf_hakbun.getText() + "', '" + bookNo + "', default, '', '대출');";
+						query(RentalStatus.LOAN, sql);
+						JOptionPane.showMessageDialog(null, "대출이 완료되었습니다.", "Message", JOptionPane.OK_OPTION);
+						model2.setRowCount(0);
+						pane2.setVisible(false);
+						setLocation(150, 70);
+					}
 				}
 			}
 		});
+		pane2.add(btnSelect2);
+		JLabel label_split2 = new JLabel("|                                             |");
 		
-		btnSelect2.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-//				if(!tf_bookNo.getText().equals("")) {
-//					//query(RentalStatus.SEARCH2, 1, tf_bookNo.getText());
-//				} else if(!tf_bookName.getText().equals("")) {
-//					//query(RentalStatus.SEARCH2, 2, tf_bookName.getText());
-//				}
-			}
-		});
+		pane2.add(label_split2);
+
+		String colName2 [] = {"이름", "대출일", "반납일"};
+		model2 = new DefaultTableModel(colName2, 0);
+		table2 = new JTable(model2);
+		
+		table2.setPreferredScrollableViewportSize(new Dimension(210, 200));
+		pane2.add(new JScrollPane(table2));
+
+		
 		
 		table1.addMouseListener(new MouseListener() {
 			
@@ -207,45 +182,29 @@ public class BookRental extends JPanel{
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-//				table1 = (JTable)e.getComponent();
-//				model1 = (DefaultTableModel)table1.getModel();
-//				String id = (String)model1.getValueAt(table1.getSelectedRow(), 0);
-//				String name = (String)model1.getValueAt(table1.getSelectedRow(), 1);
-//				String dept = (String)model1.getValueAt(table1.getSelectedRow(), 2);
-//				
-//				tf_hakbun.setText(id);
-//				tf_name.setText(name);
+				model2.setRowCount(0);
+				pane2.setVisible(true);
+				setLocation(40, 50);
+				table1 = (JTable)e.getComponent();
+				model1 = (DefaultTableModel)table1.getModel();
+				bookNo = (String)model1.getValueAt(table1.getSelectedRow(), 0);
 				
-			}
-		});
+				String sql = "SELECT Student.Student_name, BookRental.BookRental_bDate, BookRental.BookRental_aDate, BookRental.BookRental_loan FROM Student, Books, BookRental WHERE Books.Book_no = BookRental.RentBook_No AND BookRental.RentStudent_id = Student.Student_id AND Books.Book_no = '" + bookNo + "'";
+				
+				query(RentalStatus.BOOKSELECT1, sql);
 		
-		table2.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
 			}
 		});
 		
 		
 		query(RentalStatus.BOOKSELECT, null);
-		//query(RentalStatus.SEARCH2, 0, null);
-
-			
+		
+		setOpaque(false);
+		setLocation(150, 70);
 		setSize(530, 420);
 		setVisible(true);
+		
+		
 	}
 	
 	private void query(RentalStatus status, String sSql) {
@@ -257,16 +216,7 @@ public class BookRental extends JPanel{
 				stmt = conn.createStatement();
 				
 				rs = stmt.executeQuery("Select * from Books");
-//				else {
-//					if(index == 1) {
-//						rs = stmt.executeQuery("Select * from Student where Student_id = '" + inValue + "'");
-//					} else if(index == 2) {
-//						rs = stmt.executeQuery("Select * from Student where Student_name = '" + inValue + "'");
-//					} else if(index == 3) {
-//						rs = stmt.executeQuery("Select * from Student where Student_dept = '" + inValue + "'");
-//					}
-//				}
-					
+				
 				while(rs.next()) {
 					String [] row = new String[3];
 					row[0] = rs.getString("Book_no");
@@ -292,9 +242,26 @@ public class BookRental extends JPanel{
 				} else {
 					JOptionPane.showMessageDialog(null, "학생이 없습니다.", "Message", JOptionPane.OK_OPTION);
 				}
+				rs.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+		case BOOKSELECT1:
+			Pivot = "";
+			try {
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery(sSql);
 				
-				
-			
+				while(rs.next()) {
+					String [] row = new String[3];
+					row[0] = rs.getString("Student_name");
+					row[1] = rs.getString("BookRental_bDate");
+					row[2] = rs.getString("BookRental_aDate");
+					Pivot = rs.getString("BookRental_loan");
+					model2.addRow(row);
+				}
 				rs.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -302,26 +269,9 @@ public class BookRental extends JPanel{
 			}
 			break;
 		case LOAN:
-//			SimpleDateFormat format = new SimpleDateFormat ( "yyyyMMdd");
-//			Date date = new Date();
-			
-			//String time = format.format(date);
-			
 			try {
 				stmt = conn.createStatement();
-//				if(inValue == null)
-//					stmt.executeUpdate("insert into BookRental(RentStudent_id, RentBook_No, BookRental_Date, BookRental_loan) values('"+ tf_hakbun.getText() +"','" + tf_bookNo.getText() + "','" + time + "', '대출')");
-//					stmt.executeUpdate("UPDATE Books SET Book_loan = 'N' WHERE Book_no = '" + tf_bookNo.getText() + "'");
-			} catch (Exception e) {
-					// TODO: handle exception
-			}
-			break;
-		case RETURN:
-			try {
-				stmt = conn.createStatement();
-//				if(inValue == null)
-//					stmt.executeUpdate("UPDATE BookRental SET BookRental_loan = '반납' WHERE RentBook_No = '" + tf_bookNo.getText() + "'");
-//					stmt.executeUpdate("UPDATE Books SET Book_loan = 'Y' WHERE Book_no = '" + tf_bookNo.getText() + "'");
+				stmt.executeUpdate(sSql);
 			} catch (Exception e) {
 					// TODO: handle exception
 			}

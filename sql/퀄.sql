@@ -59,27 +59,30 @@ create table BookRental
 ( BookRental_no int(10) primary KEY NOT NULL AUTO_INCREMENT, -- 대여번호
   RentStudent_id char(7) not null, -- 학번
   RentBook_No char(6) not null, -- 책번호
-  BookRental_Date CHAR(8) not NULL,
-  BookRental_loan CHAR(4) NOT NULL,
+  BookRental_bDate CHAR(10) DEFAULT DATE_FORMAT(NOW(),'%Y-%m-%d'),
+  BookRental_aDate CHAR(10) DEFAULT DATE_FORMAT(NOW(),'%Y-%m-%d'),
+  BookRental_loan CHAR(2) NOT NULL,
   CONSTRAINT cons_RS FOREIGN KEY (RentStudent_id) REFERENCES Student (Student_id),
   CONSTRAINT cons_RB FOREIGN KEY (RentBook_No) REFERENCES Books (Book_no)
 );
 
 DROP TABLE BookRental;
 SELECT * FROM BookRental;
+SELECT Student.Student_name, BookRental.BookRental_bDate, BookRental.BookRental_aDate, BookRental.BookRental_loan FROM Student, Books, BookRental WHERE Books.Book_no = BookRental.RentBook_No AND BookRental.RentStudent_id = Student.Student_id AND Books.Book_no = '000001'
+SELECT BookRental.BookRental_bDate, BookRental.BookRental_aDate FROM Books, BookRental WHERE Books.Book_no = BookRental.RentBook_No AND Books.Book_no = '000001'
 
 
 SELECT Student_dept FROM Student
 GROUP BY Student_dept;
 
 
-DELETE FROM BookRental;
 
 
 
 
+INSERT INTO BookRental(RentStudent_id, RentBook_No, BookRental_bDate, BookRental_aDate, BookRental_loan) VALUES('1111111', '000001', default, '', '대출');
 
-insert into BookRental(RentStudent_id, RentBook_No, BookRental_Date, BookRental_loan) values('0034567','000001','20170713', '반납');
+insert into BookRental(RentStudent_id, RentBook_No, BookRental_bDate, BookRental_aDate, BookRental_loan) VALUES('2222222','000001', default, default, '반납');
 insert into BookRental(RentStudent_id, RentBook_No, BookRental_Date, BookRental_loan) values('0123123','000003','20170713', '반납');
 insert into BookRental(RentStudent_id, RentBook_No, BookRental_Date, BookRental_loan) values('0123123','000002','20170713', '반납');
 insert into BookRental(RentStudent_id, RentBook_No, BookRental_Date, BookRental_loan) values('0034567','000003','20170713', '반납');
@@ -137,8 +140,8 @@ INSERT INTO Majors(Major_id, Major_name) VALUES ('0000000001', '멀티미디어'
 INSERT INTO Majors(Major_id, Major_name) VALUES ('0000000002', '컴퓨터시스템');
 INSERT INTO Majors(Major_id, Major_name) VALUES ('0000000003', '전자공학');
 
-
-
+SELECT br.RentStudent_id, s.Student_name, b.Book_title, br.BookRental_Date, br.BookRental_loan FROM BookRental br, Student s, Books b WHERE br.RentStudent_id = s.Student_id AND br.RentBook_No = b.Book_no
+SELECT Majors.Major_name FROM Student, Majors WHERE Majors.Major_id = Student.Student_dept GROUP BY Student_dept;
 -- 과목
 
 CREATE TABLE Subjects(
@@ -280,6 +283,8 @@ END;
 DELIMITER ;
 
 
+INSERT INTO Grades(Grade_studentId, Grade_SubjId, Grade_rank) VALUES (_STUDENTID, subjId, DEFAULT);
+
 -- 학생 삭제 쿼리
 DELIMITER 
 //
@@ -356,6 +361,8 @@ DELIMITER ;
 DROP PROCEDURE Select_Subject;
 
 CALL Select_Subject(NULL, '유관순');
+
+
 
 --------------------------------- 테스트 예제 샘플 --------------------------------------
 
