@@ -56,12 +56,12 @@ public class BookRentalList extends JPanel{
 				int cb_index = cb.getSelectedIndex();
 				
 				if(cb_index == 0) {
-					String query = "SELECT br.RentStudent_id, s.Student_name, b.Book_title, br.BookRental_Date, br.BookRental_loan FROM BookRental br, Student s, Books b WHERE br.RentStudent_id = s.Student_id AND br.RentBook_No = b.Book_no";
+					String query = "SELECT Student.Student_id, Student.Student_name, Majors.Major_name, Student.Student_address, BookRental.BookRental_bDate, BookRental.BookRental_aDate, BookRental.BookRental_loan FROM BookRental, Student, Books, Majors WHERE RentStudent_id = Student_id AND RentBook_No = Book_no AND Major_id = Student_dept";
 					BookList(query);
 				} else {
 					
-					String query = "SELECT br.RentStudent_id, s.Student_name, b.Book_title, br.BookRental_Date, br.BookRental_loan FROM BookRental br, Student s, Books b WHERE br.RentStudent_id = s.Student_id AND br.RentBook_No = b.Book_no and "
-							+ "s.Student_dept = '" + row.get(cb_index) + "'";
+					String query = "SELECT Student.Student_id, Student.Student_name, Majors.Major_name, Student.Student_address, BookRental.BookRental_bDate, BookRental.BookRental_aDate, BookRental.BookRental_loan FROM BookRental, Student, Books, Majors WHERE RentStudent_id = Student_id AND RentBook_No = Book_no AND Major_id = Student_dept and "
+							+ "Student.Student_dept = '" + row.get(cb_index) + "'";
 					BookList(query);
 				}
 				
@@ -76,11 +76,11 @@ public class BookRentalList extends JPanel{
 		String colName [] = {"학번", "이름", "학과", "주소", "대출일", "반납일", "대여여부"};
 		model = new DefaultTableModel(colName, 0);
 		table = new JTable(model);
-		// ���̺� ������
+
 		table.setPreferredScrollableViewportSize(new Dimension(560, 400));
 		add(new JScrollPane(table));
 		
-		String query = "SELECT br.RentStudent_id, s.Student_name, b.Book_title, br.BookRental_Date, BookRental_loan FROM BookRental br, Student s, Books b WHERE br.RentStudent_id = s.Student_id AND br.RentBook_No = b.Book_no";
+		String query = "SELECT Student.Student_id, Student.Student_name, Majors.Major_name, Student.Student_address, BookRental.BookRental_bDate, BookRental.BookRental_aDate, BookRental.BookRental_loan FROM BookRental, Student, Books, Majors WHERE RentStudent_id = Student_id AND RentBook_No = Book_no AND Major_id = Student_dept";
 		BookList(query);
 		
 		setLocation(8, 20);
@@ -93,11 +93,13 @@ public class BookRentalList extends JPanel{
 		try {
 			ResultSet rs = null;
 			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT Majors.Major_name FROM Student, Majors WHERE Majors.Major_id = Student.Student_dept GROUP BY Student_dept ");
+			rs = stmt.executeQuery("SELECT Majors.Major_name, Majors.Major_id FROM Student, Majors WHERE Majors.Major_id = Student.Student_dept GROUP BY Student_dept");
 			
 			row.add("전체");
+			cb_dept.addItem("전체");
 			while(rs.next()) {
-				row.add(rs.getString("Major_name"));
+				row.add(rs.getString("Major_id"));
+				cb_dept.addItem(rs.getString("Major_name"));
 			}
 			
 			rs.close();
@@ -106,9 +108,9 @@ public class BookRentalList extends JPanel{
 			System.out.println(e.getMessage());
 		}
 		
-		for (int i = 0; i < row.size(); i++) {
-			cb_dept.addItem(row.get(i));
-		}
+//		for (int i = 0; i < row.size(); i++) {
+//			cb_dept.addItem(row.get(i));
+//		}
 		
 		
 	}
@@ -122,12 +124,14 @@ public class BookRentalList extends JPanel{
 			stmt = conn.createStatement();
 			
 			while(rs.next()) {
-				String [] row = new String[5];
-				row[0] = rs.getString("br.RentStudent_id");
-				row[1] = rs.getString("s.Student_name");
-				row[2] = rs.getString("b.Book_title");
-				row[3] = rs.getString("br.BookRental_Date");
-				row[4] = rs.getString("br.BookRental_loan");
+				String [] row = new String[7];
+				row[0] = rs.getString("Student_id");
+				row[1] = rs.getString("Student_name");
+				row[2] = rs.getString("Major_name");
+				row[3] = rs.getString("Student_address");
+				row[4] = rs.getString("BookRental_bDate");
+				row[5] = rs.getString("BookRental_aDate");
+				row[6] = rs.getString("BookRental_loan");
 				model.addRow(row);
 			}
 			

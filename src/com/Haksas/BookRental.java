@@ -29,14 +29,14 @@ public class BookRental extends JPanel{
 	Connection conn = null;
 	Statement stmt = null;
 	
-	JPanel pane1 = new JPanel();
-	JPanel pane2 = new JPanel();
+	JPanel paneLeon_1 = new JPanel();
+	JPanel paneLeon_2 = new JPanel();
 	
-	DefaultTableModel model1 = null;
-	JTable table1 = null;
+	DefaultTableModel Leon_model1 = null;
+	JTable Leon_table1 = null;
 	
-	DefaultTableModel model2 = null;
-	JTable table2 = null;
+	DefaultTableModel Leon_model2 = null;
+	JTable Leon_table2 = null;
 	
 	private enum RentalStatus { BOOKSELECT, STUDENTSELECT, BOOKSELECT1, LOAN, RETURN};
 	
@@ -54,31 +54,53 @@ public class BookRental extends JPanel{
 		this.conn = conn;
 		
 		setLayout(null);
-		this.add(pane1);
-		this.add(pane2);
+		this.add(paneLeon_1);
+		this.add(paneLeon_2);
+		setBorder(new LineBorder(Color.BLACK));
+		paneLeon_1.setBorder(new LineBorder(Color.BLACK));
+		paneLeon_2.setBorder(new LineBorder(Color.BLACK));
 		
-		pane1.setBorder(new LineBorder(Color.BLACK));
-		
-		
-		pane1.setLayout(new FlowLayout());
-		pane1.setLocation(0, 0);
-		pane1.setSize(280, 400);
-		pane1.setVisible(true);
-		pane2.setLayout(new FlowLayout());
-		pane2.setLocation(290, 90);
-		pane2.setSize(220, 265);
-		pane2.setVisible(false);
+		paneLeon_1.setLayout(new FlowLayout());
+		paneLeon_1.setSize(280, 400);
+		paneLeon_1.setVisible(false);
+		paneLeon_2.setLayout(new FlowLayout());
+		paneLeon_2.setSize(220, 265);
+		paneLeon_2.setVisible(false);
 		
 	
-		//pane1.setBorder(new LineBorder(Color.RED));
-		pane2.setBorder(new LineBorder(Color.BLACK));
-
+		JButton btn_Loan = new JButton("대출");
+		JButton btn_Return = new JButton("반납");
+		btn_Loan.setBounds(10, 120, 100, 100);
+		btn_Return.setBounds(180, 120, 100, 100);
+		btn_Loan.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				btn_Loan.setVisible(false);
+				btn_Return.setVisible(false);
+				paneLeon_1.setVisible(true);
+				paneLeon_1.setLocation(150, 70);
+			}
+		});
+		this.add(btn_Loan);
+		
+		
+		btn_Return.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		this.add(btn_Return);
 		JLabel label_hakbun = new JLabel("학번");
-		pane1.add(label_hakbun);
+		paneLeon_1.add(label_hakbun);
 		
 		tf_hakbun = new JTextField(12);
 		tf_hakbun.setEditable(false);
-		pane1.add(tf_hakbun);
+		paneLeon_1.add(tf_hakbun);
 		
 		
 		
@@ -93,40 +115,40 @@ public class BookRental extends JPanel{
 				
 			}
 		});
-		pane1.add(btnSelect1);
+		paneLeon_1.add(btnSelect1);
 		JLabel label_split = new JLabel("         ");
 		
-		pane1.add(label_split);
+		paneLeon_1.add(label_split);
 		
 		JLabel label_name = new JLabel("이름");
 		
-		pane1.add(label_name);
+		paneLeon_1.add(label_name);
 		
 		tf_name = new JTextField(12);
-		pane1.add(tf_name);
+		paneLeon_1.add(tf_name);
 		
 		JLabel label_split1 = new JLabel("                               ");
 		
-		pane1.add(label_split1);
+		paneLeon_1.add(label_split1);
 		
 
 		String colName1 [] = {"책번호", "책이름", "반납여부"};
-		model1 = new DefaultTableModel(colName1, 0) {
+		Leon_model1 = new DefaultTableModel(colName1, 0) {
 			private static final long serialVersionUID = 6435L;
 			public boolean isCellEditable(int i, int c){ return false; } // 컬럼에서 수정불가
 		};
-		table1 = new JTable(model1);
+		Leon_table1 = new JTable(Leon_model1);
 		//컬럼 이동 막기
-		table1.getTableHeader().setReorderingAllowed(false);
-		table1.getTableHeader().setResizingAllowed(false);
+		Leon_table1.getTableHeader().setReorderingAllowed(false);
+		Leon_table1.getTableHeader().setResizingAllowed(false);
 				
-		table1.setPreferredScrollableViewportSize(new Dimension(230, 300));
-		pane1.add(new JScrollPane(table1));
+		Leon_table1.setPreferredScrollableViewportSize(new Dimension(230, 300));
+		paneLeon_1.add(new JScrollPane(Leon_table1));
 		
 		
 		JLabel label_arrow = new JLabel("  ▶    ");
 		
-		pane1.add(label_arrow);
+		paneLeon_1.add(label_arrow);
 		
 	
 		
@@ -145,28 +167,28 @@ public class BookRental extends JPanel{
 						String sql = "INSERT INTO BookRental(RentStudent_id, RentBook_No, BookRental_bDate, BookRental_aDate, BookRental_loan) VALUES('" + tf_hakbun.getText() + "', '" + bookNo + "', default, '', '대출');";
 						query(RentalStatus.LOAN, sql);
 						JOptionPane.showMessageDialog(null, "대출이 완료되었습니다.", "Message", JOptionPane.OK_OPTION);
-						model2.setRowCount(0);
-						pane2.setVisible(false);
+						Leon_model2.setRowCount(0);
+						paneLeon_2.setVisible(false);
 						setLocation(150, 70);
 					}
 				}
 			}
 		});
-		pane2.add(btnSelect2);
+		paneLeon_2.add(btnSelect2);
 		JLabel label_split2 = new JLabel("|                                             |");
 		
-		pane2.add(label_split2);
+		paneLeon_2.add(label_split2);
 
 		String colName2 [] = {"이름", "대출일", "반납일"};
-		model2 = new DefaultTableModel(colName2, 0);
-		table2 = new JTable(model2);
+		Leon_model2 = new DefaultTableModel(colName2, 0);
+		Leon_table2 = new JTable(Leon_model2);
 		
-		table2.setPreferredScrollableViewportSize(new Dimension(210, 200));
-		pane2.add(new JScrollPane(table2));
+		Leon_table2.setPreferredScrollableViewportSize(new Dimension(210, 200));
+		paneLeon_2.add(new JScrollPane(Leon_table2));
 
 		
 		
-		table1.addMouseListener(new MouseListener() {
+		Leon_table1.addMouseListener(new MouseListener() {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {}
@@ -182,12 +204,13 @@ public class BookRental extends JPanel{
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				model2.setRowCount(0);
-				pane2.setVisible(true);
-				setLocation(40, 50);
-				table1 = (JTable)e.getComponent();
-				model1 = (DefaultTableModel)table1.getModel();
-				bookNo = (String)model1.getValueAt(table1.getSelectedRow(), 0);
+				Leon_model2.setRowCount(0);
+				paneLeon_2.setVisible(true);
+				paneLeon_1.setLocation(40, 70);
+				paneLeon_2.setLocation(330, 150);
+				Leon_table1 = (JTable)e.getComponent();
+				Leon_model1 = (DefaultTableModel)Leon_table1.getModel();
+				bookNo = (String)Leon_model1.getValueAt(Leon_table1.getSelectedRow(), 0);
 				
 				String sql = "SELECT Student.Student_name, BookRental.BookRental_bDate, BookRental.BookRental_aDate, BookRental.BookRental_loan FROM Student, Books, BookRental WHERE Books.Book_no = BookRental.RentBook_No AND BookRental.RentStudent_id = Student.Student_id AND Books.Book_no = '" + bookNo + "'";
 				
@@ -200,8 +223,8 @@ public class BookRental extends JPanel{
 		query(RentalStatus.BOOKSELECT, null);
 		
 		setOpaque(false);
-		setLocation(150, 70);
-		setSize(530, 420);
+		setLocation(0, 0);
+		setSize(600, 600);
 		setVisible(true);
 		
 		
@@ -211,7 +234,7 @@ public class BookRental extends JPanel{
 		ResultSet rs = null;
 		switch(status) {
 		case BOOKSELECT:
-			model1.setNumRows(0);
+			Leon_model1.setNumRows(0);
 			try {
 				stmt = conn.createStatement();
 				
@@ -222,7 +245,7 @@ public class BookRental extends JPanel{
 					row[0] = rs.getString("Book_no");
 					row[1] = rs.getString("Book_title");
 					row[2] = rs.getString("Book_loan");
-					model1.addRow(row);
+					Leon_model1.addRow(row);
 				}
 				rs.close();
 			} catch (Exception e) {
@@ -260,7 +283,7 @@ public class BookRental extends JPanel{
 					row[1] = rs.getString("BookRental_bDate");
 					row[2] = rs.getString("BookRental_aDate");
 					Pivot = rs.getString("BookRental_loan");
-					model2.addRow(row);
+					Leon_model2.addRow(row);
 				}
 				rs.close();
 			} catch (Exception e) {
