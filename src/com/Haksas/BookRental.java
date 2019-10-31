@@ -70,8 +70,8 @@ public class BookRental extends JPanel{
 	
 		JButton btn_Loan = new JButton("대출");
 		JButton btn_Return = new JButton("반납");
-		btn_Loan.setBounds(10, 120, 100, 100);
-		btn_Return.setBounds(180, 120, 100, 100);
+		btn_Loan.setBounds(150, 200, 100, 100);
+		btn_Return.setBounds(340, 200, 100, 100);
 		btn_Loan.addActionListener(new ActionListener() {
 			
 			@Override
