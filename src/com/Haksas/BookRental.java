@@ -32,11 +32,16 @@ public class BookRental extends JPanel{
 	JPanel paneLeon_1 = new JPanel();
 	JPanel paneLeon_2 = new JPanel();
 	
+	JPanel panereturn_1 = new JPanel();
+	
 	DefaultTableModel Leon_model1 = null;
 	JTable Leon_table1 = null;
 	
 	DefaultTableModel Leon_model2 = null;
 	JTable Leon_table2 = null;
+	
+	DefaultTableModel Return_model1 = null;
+	JTable Return_table1 = null;
 	
 	private enum RentalStatus { BOOKSELECT, STUDENTSELECT, BOOKSELECT1, LOAN, RETURN};
 	
@@ -84,8 +89,6 @@ public class BookRental extends JPanel{
 			}
 		});
 		this.add(btn_Loan);
-		
-		
 		btn_Return.addActionListener(new ActionListener() {
 			
 			@Override
@@ -95,6 +98,14 @@ public class BookRental extends JPanel{
 			}
 		});
 		this.add(btn_Return);
+		
+		
+		JButton btn_Back = new JButton("뒤로");
+		btn_Back.setBounds(240, 30, 80, 30);
+		
+		this.add(btn_Back);
+		
+		
 		JLabel label_hakbun = new JLabel("학번");
 		paneLeon_1.add(label_hakbun);
 		
