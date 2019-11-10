@@ -49,6 +49,7 @@ public class BookRental extends JPanel{
 	
 	private JTextField tf_name = null;
 	
+	private JButton btn_Back = null;
 	
 	private String Pivot = "";
 	
@@ -72,6 +73,13 @@ public class BookRental extends JPanel{
 		paneLeon_2.setSize(220, 265);
 		paneLeon_2.setVisible(false);
 		
+		
+		this.add(panereturn_1);
+		
+		panereturn_1.setLayout(new FlowLayout());
+		panereturn_1.setSize(280, 400);
+		panereturn_1.setVisible(false);
+		
 	
 		JButton btn_Loan = new JButton("대출");
 		JButton btn_Return = new JButton("반납");
@@ -80,12 +88,15 @@ public class BookRental extends JPanel{
 		btn_Loan.addActionListener(new ActionListener() {
 			
 			@Override
+			
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				btn_Loan.setVisible(false);
 				btn_Return.setVisible(false);
+				btn_Back.setVisible(true);
 				paneLeon_1.setVisible(true);
 				paneLeon_1.setLocation(150, 70);
+				
 			}
 		});
 		this.add(btn_Loan);
@@ -94,18 +105,34 @@ public class BookRental extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				
+				btn_Loan.setVisible(false);
+				btn_Return.setVisible(false);
+				panereturn_1.setVisible(true);
+				panereturn_1.setLocation(150, 70);
 			}
 		});
 		this.add(btn_Return);
 		
 		
-		JButton btn_Back = new JButton("뒤로");
+		btn_Back = new JButton("뒤로");
 		btn_Back.setBounds(240, 30, 80, 30);
-		
+		btn_Back.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				paneLeon_1.setVisible(false);
+				paneLeon_2.setVisible(false);
+				btn_Loan.setVisible(true);
+				btn_Return.setVisible(true);
+				btn_Back.setVisible(false);
+				
+			}
+		});
+		btn_Back.setVisible(false);
 		this.add(btn_Back);
 		
-		
+		//대출 화면 
 		JLabel label_hakbun = new JLabel("학번");
 		paneLeon_1.add(label_hakbun);
 		
@@ -229,6 +256,19 @@ public class BookRental extends JPanel{
 		
 			}
 		});
+		// 대출 화면 끝
+		
+		// 반납 화면
+		
+		
+		JLabel stNum_Label = new JLabel("학번");
+		JTextField tf_stNum = new JTextField(18);
+		JButton btn_Select2 = new JButton("검색");
+		panereturn_1.add(stNum_Label);
+		panereturn_1.add(tf_stNum);
+		panereturn_1.add(btn_Select2);
+		
+		
 		
 		
 		query(RentalStatus.BOOKSELECT, null);
