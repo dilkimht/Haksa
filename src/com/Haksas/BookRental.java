@@ -24,6 +24,8 @@ import javax.swing.table.DefaultTableModel;
 
 
 
+
+
 public class BookRental extends JPanel{
 	private static final long serialVersionUID = 132L;
 	Connection conn = null;
@@ -43,11 +45,15 @@ public class BookRental extends JPanel{
 	DefaultTableModel Return_model1 = null;
 	JTable Return_table1 = null;
 	
-	private enum RentalStatus { BOOKSELECT, STUDENTSELECT, BOOKSELECT1, LOAN, RETURN};
+	
+	
+	private enum RentalStatus { BOOKSELECT, STUDENTSELECT, BOOKSELECT1, BOOKSELECT2, LOAN, RETURN};
 	
 	private JTextField tf_hakbun = null;
 	
 	private JTextField tf_name = null;
+	
+	private JTextField tf_stNum = null;
 	
 	private JButton btn_Back = null;
 	
@@ -80,6 +86,8 @@ public class BookRental extends JPanel{
 		panereturn_1.setSize(280, 400);
 		panereturn_1.setVisible(false);
 		
+		panereturn_1.setBorder(new LineBorder(Color.BLACK));
+		
 	
 		JButton btn_Loan = new JButton("대출");
 		JButton btn_Return = new JButton("반납");
@@ -107,6 +115,7 @@ public class BookRental extends JPanel{
 				// TODO Auto-generated method stub
 				btn_Loan.setVisible(false);
 				btn_Return.setVisible(false);
+				btn_Back.setVisible(true);
 				panereturn_1.setVisible(true);
 				panereturn_1.setLocation(150, 70);
 			}
@@ -123,6 +132,7 @@ public class BookRental extends JPanel{
 				// TODO Auto-generated method stub
 				paneLeon_1.setVisible(false);
 				paneLeon_2.setVisible(false);
+				panereturn_1.setVisible(false);
 				btn_Loan.setVisible(true);
 				btn_Return.setVisible(true);
 				btn_Back.setVisible(false);
@@ -262,13 +272,89 @@ public class BookRental extends JPanel{
 		
 		
 		JLabel stNum_Label = new JLabel("학번");
-		JTextField tf_stNum = new JTextField(18);
+		tf_stNum = new JTextField(12);
+		tf_stNum.setEditable(false);
+		JLabel label_split3 = new JLabel("           ");
+		
 		JButton btn_Select2 = new JButton("검색");
+		
+		JLabel stName_Label = new JLabel("이름");
+		JTextField tf_stName = new JTextField(12);
+		JButton btn_loan2 = new JButton("반납");
+		JLabel label_split4 = new JLabel("           ");
+		btn_Select2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Return_model1.setRowCount(0);
+				String sql = "SELECT Books.Book_no, Books.Book_title, BookRental.BookRental_loan, Student.Student_id FROM BookRental, Books, Student WHERE BookRental.RentBook_No = Books.Book_no AND BookRental.RentStudent_id = Student.Student_id AND BookRental.BookRental_loan = '대출' AND Student.Student_name ='" + tf_stName.getText()+ "'";
+				
+				query(RentalStatus.BOOKSELECT2, sql);
+			}
+		});
+		btn_loan2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int result = JOptionPane.showConfirmDialog(null, bookNo + "책을 반납 하시겠습니까?", "Message", JOptionPane.YES_NO_OPTION);
+				
+				switch (result) {
+				case JOptionPane.OK_OPTION:
+					String sql = "UPDATE BookRental SET BookRental_loan = '반납', BookRental_aDate = DATE_FORMAT(NOW(),'%Y-%m-%d') WHERE RentBook_No = '" + bookNo + "'";
+					
+					query(RentalStatus.BOOKSELECT2, sql);
+					JOptionPane.showMessageDialog(null, "반납이 완료되었습니다.", "Message", JOptionPane.OK_OPTION);
+					Return_model1.setRowCount(0);
+					break;
+				case JOptionPane.NO_OPTION: return;
+				default: break;
+				}
+			}
+		});
 		panereturn_1.add(stNum_Label);
 		panereturn_1.add(tf_stNum);
+		panereturn_1.add(label_split3);
 		panereturn_1.add(btn_Select2);
+		panereturn_1.add(stName_Label);
+		panereturn_1.add(tf_stName);
+		panereturn_1.add(label_split4);
+		panereturn_1.add(btn_loan2);
 		
+		String colName3 [] = {"책번호", "책이름", "반납여부"};
+		Return_model1 = new DefaultTableModel(colName3, 0) {
+			private static final long serialVersionUID = 6435L;
+			public boolean isCellEditable(int i, int c){ return false; } // 컬럼에서 수정불가
+		};
+		Return_table1 = new JTable(Return_model1);
+		//컬럼 이동 막기
+		Return_table1.getTableHeader().setReorderingAllowed(false);
+		Return_table1.getTableHeader().setResizingAllowed(false);
+				
+		Return_table1.setPreferredScrollableViewportSize(new Dimension(260, 300));
+		panereturn_1.add(new JScrollPane(Return_table1));
 		
+		Return_table1.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				bookNo = (String)Return_model1.getValueAt(Return_table1.getSelectedRow(), 0);
+			}
+		});
 		
 		
 		query(RentalStatus.BOOKSELECT, null);
@@ -339,6 +425,24 @@ public class BookRental extends JPanel{
 				rs.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
+		case BOOKSELECT2:
+			try {
+				stmt = conn.createStatement();
+				rs = stmt.executeQuery(sSql);
+				
+				while(rs.next()) {
+					String [] row = new String[3];
+					row[0] = rs.getString("Book_no");
+					row[1] = rs.getString("Book_title");
+					row[2] = rs.getString("BookRental_loan");
+					tf_stNum.setText(rs.getString("Student_id"));
+					Return_model1.addRow(row);
+				}
+				rs.close();
+			} catch(Exception e) {
 				e.printStackTrace();
 			}
 			break;
